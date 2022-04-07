@@ -3,15 +3,11 @@ import {Editor, Transforms, createEditor} from "slate";
 import {useSlate, Slate, withReact, Editable} from 'slate-react';
 import {ToggleButton, Paper, ToggleButtonGroup, Divider, FormControl} from '@mui/material';
 import {withHistory} from 'slate-history';
-// import {withEmbeds} from './SlateEmbeds';
-// import {withLinks} from './SlateLinks';
 import isHotkey from 'is-hotkey';
-
 import {
-    FormatBold, FormatItalic, FormatUnderlined,
-    Code, LooksOne, LooksTwo, FormatQuote, FormatListNumbered, List
+    FormatBold, FormatItalic, FormatUnderlined, Code, LooksOne,
+    LooksTwo, FormatQuote, FormatListNumbered, List
 } from '@mui/icons-material';
-import {createStyles, makeStyles, Theme, withStyles} from '@material-ui/core/styles';
 
 export const HOTKEYS = {
     "mod+b": "bold",
@@ -108,9 +104,6 @@ export const toggleMark = (editor, format) => {
     }
 };
 
-
-////////////
-
 const BlockButton = ({format, icon}) => {
     const editor = useSlate();
     return (
@@ -144,10 +137,13 @@ const MarkButton = ({format, icon}) => {
 };
 
 export const SlateToolbar = () => {
-    const classes = useStyles();
     return (
-        <Paper elevation={2} className={classes.paper}>
-            <StyledToggleButtonGroup size="small" arial-label="text formatting">
+        <Paper elevation={2}>
+            <ToggleButtonGroup
+                size="small"
+                arial-label="text formatting"
+                sx={{display: 'flex', flexWrap: "wrap", border: 'none'}}
+            >
                 {MarkButton({format: "bold", icon: <FormatBold/>})}
                 {MarkButton({
                     format: "italic",
@@ -161,13 +157,6 @@ export const SlateToolbar = () => {
                     format: "code",
                     icon: <Code/>,
                 })}
-            </StyledToggleButtonGroup>
-            <Divider orientation="vertical" className={classes.divider}/>
-            <StyledToggleButtonGroup
-                size="small"
-                arial-label="text formatting"
-                exclusive
-            >
                 {BlockButton({format: "heading-one", icon: <LooksOne/>})}
                 {BlockButton({format: "heading-two", icon: <LooksTwo/>})}
                 {BlockButton({
@@ -182,8 +171,8 @@ export const SlateToolbar = () => {
                     format: "bulleted-list",
                     icon: <List/>,
                 })}
-            </StyledToggleButtonGroup>
-            <Divider orientation="vertical" className={classes.divider}/>
+            </ToggleButtonGroup>
+            <Divider orientation="vertical" />
         </Paper>
     );
 };
@@ -207,41 +196,6 @@ export const HoveringToolbar = () => {
     );
 };
 
-const useStyles = makeStyles((theme) =>
-    createStyles({
-        paper: {
-            display: "flex",
-            border: `2px solid ${theme.palette.divider}`,
-            flexWrap: "wrap",
-        },
-        divider: {
-            alignSelf: "stretch",
-            height: "auto",
-            margin: theme.spacing(1, 0.5),
-        },
-        button: {
-            border: "none",
-            paddingBottom: theme.spacing(1),
-        },
-    })
-);
-
-const StyledToggleButtonGroup = withStyles((theme) => ({
-    grouped: {
-        display: "flex",
-        flexWrap: "wrap",
-        margin: theme.spacing(0.5),
-        border: "none",
-        padding: theme.spacing(0, 1.5),
-        "&:not(:first-child)": {
-            borderRadius: theme.shape.borderRadius,
-        },
-        "&:first-child": {
-            borderRadius: theme.shape.borderRadius,
-        },
-    },
-}))(ToggleButtonGroup);
-
 const TextEditor = (props) => {
     const [value, setValue] = useState([
         {
@@ -253,7 +207,7 @@ const TextEditor = (props) => {
         () => withHistory(withReact(createEditor())),
         []
     );
-// withEmbeds(withLinks(
+
     const renderElement = useCallback((props) => <SlateElement {...props} />, []);
     const renderLeaf = useCallback((props) => <SlateLeaf {...props} />, []);
 

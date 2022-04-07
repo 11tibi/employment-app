@@ -146,6 +146,9 @@ const CreatePost = () => {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
+                                <TextField required type="number" label="Cate perosane doriti sa angajati"/>
+                            </Grid>
+                            <Grid item xs={12}>
                                 <TextEditor />
                             </Grid>
                         </Grid>
