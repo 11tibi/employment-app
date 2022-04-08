@@ -3,6 +3,9 @@ import {
     Button, Grid, LinearProgress, Box, Paper, Typography,
     TextField, Autocomplete, InputLabel, Select, MenuItem, FormControl
 } from '@mui/material';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {useNavigate} from "react-router-dom";
 import AxiosInstance from "../../utils/AxiosApi";
 import TextEditor from '../editor/TextEditor';
@@ -14,7 +17,14 @@ const CreatePost = () => {
     const [salaryMin, setSalaryMin] = useState(0);
     const [salaryMax, setSalaryMax] = useState(0);
     const [salaryInterval, setSalaryInterval] = useState('');
-    // const [editor] = useState(() => withReact(createEditor()))
+    const [numberOfEmployees, setNumberOfEmployees] = useState('');
+    const [expiresAt, setExpiresAt] = useState(null);
+    const [description, setDescription] = useState([
+        {
+            type: 'paragraph',
+            children: [{text: ''}],
+        },
+    ]);
     const navigate = useNavigate();
 
     const handleLocationChange = async (e) => {
@@ -43,41 +53,6 @@ const CreatePost = () => {
                     <Box component="div" mx={5} pb={5}>
                         <Grid container spacing={5}>
                             <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    label="Denumirea companiei dmneavoastra"
-                                    fullWidth={true}
-                                    onChange={(e) => {
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    label="Numarul de telefon al companiei"
-                                    fullWidth={true}
-                                    onChange={(e) => {
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    label="Email-ul companiei"
-                                    fullWidth={true}
-                                    onChange={(e) => {
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    label="Website"
-                                    fullWidth={true}
-                                    onChange={(e) => {
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
                                 <Autocomplete
                                     disablePortal
                                     options={locations}
@@ -94,6 +69,7 @@ const CreatePost = () => {
                                             label="Locatie"
                                             fullWidth={true}
                                             value={location}
+                                            required
                                             onChange={handleLocationChange}/>}
                                 />
                             </Grid>
@@ -102,6 +78,7 @@ const CreatePost = () => {
                                     <InputLabel id="job-type">Tip loc de munca</InputLabel>
                                     <Select
                                         labelId="job-type"
+                                        required
                                         value={jobType}
                                         label="Tip loc de munca"
                                         fullWidth={true}
@@ -117,12 +94,12 @@ const CreatePost = () => {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={4}>
-                                <TextField required type="number" value={salaryMin} onChange={(e) => {
+                                <TextField required fullWidth type="number" value={salaryMin} onChange={(e) => {
                                     setSalaryMin(e.target.value)
                                 }} label="Salar Min"/>
                             </Grid>
                             <Grid item xs={4}>
-                                <TextField required type="number" value={salaryMax} onChange={(e) => {
+                                <TextField required fullWidth type="number" value={salaryMax} onChange={(e) => {
                                     setSalaryMax(e.target.value)
                                 }} label="Salar Max"/>
                             </Grid>
@@ -146,12 +123,44 @@ const CreatePost = () => {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField required type="number" label="Cate perosane doriti sa angajati"/>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    type="number"
+                                    label="Cate perosane doriti sa angajati"
+                                    value={numberOfEmployees}
+                                    onChange={setNumberOfEmployees}
+                                />
                             </Grid>
                             <Grid item xs={12}>
-                                <TextEditor />
+                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                    <DesktopDatePicker
+                                        label="Expirea la"
+                                        inputFormat="MM/dd/yyyy"
+                                        value={expiresAt}
+                                        onChange={(expireDate) => {
+                                            setExpiresAt(expireDate)
+                                        }}
+                                        renderInput={(params) => <TextField {...params} fullWidth required/>}
+                                    />
+                                </LocalizationProvider>
                             </Grid>
                         </Grid>
+                    </Box>
+                </Paper>
+                <Paper elevation={12} sx={{py: 5, px:5}}>
+                    <Typography component='h2' variant='h5'  mb={2}>
+                        Adaugati o descriere
+                    </Typography>
+                    <TextEditor value={description} onChange={(v) => {
+                        setDescription(v)
+                    }}/>
+                </Paper>
+                <Paper elevation={12} sx={{py:3, px:5, my:5}}>
+                    <Box display="flex" justify-content="end">
+                        <Button variant="contained">
+                            Creaza
+                        </Button>
                     </Box>
                 </Paper>
             </Box>

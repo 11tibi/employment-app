@@ -197,12 +197,7 @@ export const HoveringToolbar = () => {
 };
 
 const TextEditor = (props) => {
-    const [value, setValue] = useState([
-        {
-            type: 'paragraph',
-            children: [{text: ''}],
-        },
-    ]);
+    const [value, setValue] = useState(props.value);
     const editor = useMemo(
         () => withHistory(withReact(createEditor())),
         []
@@ -220,11 +215,12 @@ const TextEditor = (props) => {
                     <Slate
                         editor={editor}
                         value={value}
-                        onChange={(value) => {
-                            setValue(value);
-                            setValue(JSON.stringify(value));
-                        }}
+                        onChange={props.onChange}
                     >
+                        {/*(value) => {*/}
+                        {/*    setValue(value);*/}
+                        {/*    setValue(JSON.stringify(value));*/}
+                        {/*}*/}
                         <SlateToolbar/>
                         <Editable
                             renderLeaf={renderLeaf}
