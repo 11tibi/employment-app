@@ -106,6 +106,29 @@ class CityView(generics.RetrieveAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class JobView(generics.CreateAPIView):
+class EmployerCompanyView(viewsets.ModelViewSet):
+    queryset = models.EmployerCompany.objects.select_related('employer')
+    serializer_class = serializers.EmployerCompanySerializer
+    permission_classes = [permissions.AllowAny, ]
+
+    def list(self, request, *args, **kwargs):
+        data = self.queryset.filter(employer_id__user=request.user.id).all()
+        serializer = self.get_serializer(data, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class JobView(viewsets.ModelViewSet):
     queryset = models.Job.objects.all()
     serializer_class = serializers.JobSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_201_CREATED)
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        pass
+
+    def list(self, request, *args, **kwargs):
+        pass

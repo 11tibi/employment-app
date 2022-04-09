@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
     Button, Grid, LinearProgress, Box, Paper, Typography,
     TextField, Autocomplete, InputLabel, Select, MenuItem, FormControl
@@ -11,13 +11,15 @@ import AxiosInstance from "../../utils/AxiosApi";
 import TextEditor from '../editor/TextEditor';
 
 const CreatePost = () => {
+    const [title, setTitle] = useState('');
+    const [company, setCompany] = useState('');
     const [locations, setLocations] = useState([]);
     const [location, setLocation] = useState('');
     const [jobType, setJobType] = useState('');
     const [salaryMin, setSalaryMin] = useState(0);
     const [salaryMax, setSalaryMax] = useState(0);
     const [salaryInterval, setSalaryInterval] = useState('');
-    const [numberOfEmployees, setNumberOfEmployees] = useState('');
+    const [numberOfEmployees, setNumberOfEmployees] = useState(0);
     const [expiresAt, setExpiresAt] = useState(null);
     const [description, setDescription] = useState([
         {
@@ -27,6 +29,20 @@ const CreatePost = () => {
     ]);
     const navigate = useNavigate();
 
+    let companies = useRef(null);
+
+    useEffect(() => {
+        AxiosInstance.get('/api/employer-company/').then((response) => {
+            if (response.data.length === 0) {
+                navigate('/employer/account-details/');
+                return;
+            }
+            companies.current = response.data.map((item) =>
+                <MenuItem value={item.company.id} key={item.company.id}>{item.company.name}</MenuItem>
+            );
+        });
+    });
+
     const handleLocationChange = async (e) => {
         setLocation(e.target.value);
         await AxiosInstance.get(`api/city/${e.target.value}/`).then((response) => {
@@ -35,11 +51,30 @@ const CreatePost = () => {
         })
     }
 
+    const handleSubmit = (e) => {
+        const data = {
+            title,
+            company,
+            location,
+            job_type: jobType,
+            number_of_employees: numberOfEmployees,
+            salary_min: salaryMin,
+            salary_max: salaryMax,
+            salary_interval: salaryInterval,
+            description: JSON.stringify(description),
+            expires_at: expiresAt,
+        }
+        AxiosInstance.post('/api/job/', data).then((response) => {
+            navigate('/employer-dash/');
+        }).catch(error => {
+        })
+    }
+
     return (
         <>
-            <Box mt={2}>
-                <LinearProgress variant="determinate" value={25} sx={{height: 20}}/>
-            </Box>
+            {/*<Box mt={2}>*/}
+            {/*    <LinearProgress variant="determinate" value={25} sx={{height: 20}}/>*/}
+            {/*</Box>*/}
             <Box my={5} mx={5}>
                 <Box xs={12}>
                     <Paper elevation={12}>
@@ -53,12 +88,41 @@ const CreatePost = () => {
                     <Box component="div" mx={5} pb={5}>
                         <Grid container spacing={5}>
                             <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    label="Titlu"
+                                    fullWidth={true}
+                                    value={title}
+                                    onChange={(e) => {
+                                        setTitle(e.target.value);
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="comany">Selectati firma</InputLabel>
+                                    <Select
+                                        required
+                                        labelId="comany"
+                                        value={company}
+                                        label="Selectati firma"
+                                        fullWidth={true}
+                                        onChange={(e) => {
+                                            setCompany(e.target.value);
+                                        }}
+                                    >
+                                        {companies.current}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
                                 <Autocomplete
                                     disablePortal
                                     options={locations}
+                                    onChange={(e) => setLocation(e.target.value)}
                                     renderOption={(props, locations) => {
                                         return (
-                                            <li {...props} key={locations.key}>
+                                            <li {...props} key={locations.key} value={locations.key}>
                                                 {locations.label}
                                             </li>
                                         );
@@ -129,7 +193,7 @@ const CreatePost = () => {
                                     type="number"
                                     label="Cate perosane doriti sa angajati"
                                     value={numberOfEmployees}
-                                    onChange={setNumberOfEmployees}
+                                    onChange={(e) => setNumberOfEmployees(e.target.value)}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -148,17 +212,17 @@ const CreatePost = () => {
                         </Grid>
                     </Box>
                 </Paper>
-                <Paper elevation={12} sx={{py: 5, px:5}}>
-                    <Typography component='h2' variant='h5'  mb={2}>
+                <Paper elevation={12} sx={{py: 5, px: 5}}>
+                    <Typography component='h2' variant='h5' mb={2}>
                         Adaugati o descriere
                     </Typography>
                     <TextEditor value={description} onChange={(v) => {
                         setDescription(v)
                     }}/>
                 </Paper>
-                <Paper elevation={12} sx={{py:3, px:5, my:5}}>
+                <Paper elevation={12} sx={{py: 3, px: 5, my: 5}}>
                     <Box display="flex" justify-content="end">
-                        <Button variant="contained">
+                        <Button variant="contained" onClick={handleSubmit}>
                             Creaza
                         </Button>
                     </Box>

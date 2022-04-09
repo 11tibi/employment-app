@@ -176,9 +176,10 @@ class Job(models.Model):
         YEAR = 'YEAR', _('an')
 
     company = models.ForeignKey(Company, on_delete=models.RESTRICT)
-    title = models.ForeignKey(City, on_delete=models.RESTRICT)
-    location = models.CharField(max_length=20, blank=False, null=False)
+    title = models.CharField(max_length=20, blank=False, null=False)
+    location = models.ForeignKey(City, on_delete=models.RESTRICT)
     job_type = models.CharField(choices=JobType.choices, max_length=10, null=False, blank=False)
+    number_of_employees = models.PositiveIntegerField(null=False, blank=False)
     salary_max = models.IntegerField(null=False, blank=False)
     salary_min = models.IntegerField(null=False, blank=False)
     salary_interval = models.CharField(choices=SalaryInterval.choices, max_length=5, null=False, blank=False)

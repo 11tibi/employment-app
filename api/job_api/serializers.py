@@ -53,6 +53,9 @@ class CompanySerializer(serializers.ModelSerializer):
 
 
 class EmployerCompanySerializer(serializers.ModelSerializer):
+    employer = EmployerSerializer(read_only=True)
+    company = CompanySerializer(read_only=True)
+
     class Meta:
         model = models.EmployerCompany
         fields = '__all__'
@@ -73,6 +76,7 @@ class CitySerializer(serializers.ModelSerializer):
 
 
 class JobSerializer(serializers.ModelSerializer):
+    # TODO validations
     class Meta:
         model = models.Job
         fields = '__all__'
