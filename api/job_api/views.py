@@ -24,10 +24,15 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = serializers.RegisterSerializer
 
 
-class EmployerView(viewsets.ModelViewSet):
-    queryset = models.Employer.objects.all()
-    serializer_class = serializers.EmployerSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class UserCompanyView(viewsets.ModelViewSet):
+    queryset = models.UserCompany.objects.select_related('company')
+    serializer_class = serializers.UserCompanySerializer
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def list(self, request, *args, **kwargs):
+        data = self.queryset.filter(user_id=request.user.id).all()
+        serializer = self.get_serializer(data, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None, *args, **kwargs):
         user = self.queryset.filter(user=request.user.id).exists()
@@ -37,14 +42,11 @@ class EmployerView(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         company_serializer = serializers.CompanySerializer(data=request.data)
         company_serializer.is_valid(raise_exception=True)
-        employer_serializer = serializers.EmployerSerializer(data={'user': request.user.id})
-        employer_serializer.is_valid(raise_exception=True)
         try:
             with transaction.atomic():
                 company = company_serializer.save()
-                employer = employer_serializer.save()
-                employer_company_serializer = serializers.EmployerCompanySerializer(
-                    data={'employer': employer.id, 'company': company.id, 'is_admin': True})
+                employer_company_serializer = serializers.UserCompanySerializer(
+                    data={'user': request.user.id, 'company': company.id, 'is_admin': True})
                 employer_company_serializer.is_valid(raise_exception=True)
                 employer_company_serializer.save()
                 return Response(status=status.HTTP_201_CREATED)
@@ -102,17 +104,6 @@ class CityView(generics.RetrieveAPIView):
 
     def retrieve(self, request, pk=None, *args, **kwargs):
         data = self.queryset.filter(city__icontains=pk).all()
-        serializer = self.get_serializer(data, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class EmployerCompanyView(viewsets.ModelViewSet):
-    queryset = models.EmployerCompany.objects.select_related('employer')
-    serializer_class = serializers.EmployerCompanySerializer
-    permission_classes = [permissions.AllowAny, ]
-
-    def list(self, request, *args, **kwargs):
-        data = self.queryset.filter(employer_id__user=request.user.id).all()
         serializer = self.get_serializer(data, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

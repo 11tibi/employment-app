@@ -21,12 +21,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-class EmployerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Employer
-        fields = '__all__'
-
-
 class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Employee
@@ -52,12 +46,12 @@ class CompanySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class EmployerCompanySerializer(serializers.ModelSerializer):
-    employer = EmployerSerializer(read_only=True)
+class UserCompanySerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
     company = CompanySerializer(read_only=True)
 
     class Meta:
-        model = models.EmployerCompany
+        model = models.UserCompany
         fields = '__all__'
 
 

@@ -132,15 +132,8 @@ class Company(models.Model):
         return f'{self.name}'
 
 
-class Employer(models.Model):
-    user = models.OneToOneField(User, unique=True, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'{self.user}'
-
-
-class EmployerCompany(models.Model):
-    employer = models.ForeignKey(Employer, on_delete=models.CASCADE)
+class UserCompany(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     is_admin = models.BooleanField(blank=False, null=False)
 
@@ -190,14 +183,6 @@ class Job(models.Model):
 
     def __str__(self):
         return f'{self.title}'
-
-
-class JobMedia(models.Model):
-    job = models.ForeignKey(Job, on_delete=models.RESTRICT)
-    path = models.FileField(upload_to='./job/media', null=False, blank=False)
-
-    def __str__(self):
-        return f'{self.path}'
 
 
 class Candidate(models.Model):

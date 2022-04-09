@@ -6,8 +6,7 @@ from . import views
 
 router = DefaultRouter()
 router.register('employee', views.EmployeeView, basename='employee')
-router.register('employer', views.EmployerView, basename='employer')
-router.register('employer-company', views.EmployerCompanyView, basename='employer-company')
+router.register('user-company', views.UserCompanyView, basename='user-company')
 router.register('job', views.JobView, basename='job')
 
 urlpatterns = [
