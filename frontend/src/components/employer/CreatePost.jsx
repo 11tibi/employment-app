@@ -32,7 +32,7 @@ const CreatePost = () => {
     let companies = useRef(null);
 
     useEffect(() => {
-        AxiosInstance.get('/api/employer-company/').then((response) => {
+        AxiosInstance.get('/api/user-company/').then((response) => {
             if (response.data.length === 0) {
                 navigate('/employer/account-details/');
                 return;

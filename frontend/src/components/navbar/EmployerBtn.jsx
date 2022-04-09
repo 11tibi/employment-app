@@ -11,8 +11,8 @@ const EmployerBtn = () => {
 
     const handleClick = () => {
         if (user.is_authenticated) {
-            AxiosInstance.get(`api/employer/${user.id}/`).then((response) => {
-                if (response.data.exists) {
+            AxiosInstance.get(`api/user-company/`).then((response) => {
+                if (response.data.length === 0) {
                     navigate('/employer-dash/');
                 } else {
                     navigate('/employer-login/');

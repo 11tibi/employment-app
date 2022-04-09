@@ -13,7 +13,7 @@ const AccountDetails = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const data = {name, phone_number, email, website};
-        AxiosInstance.post('api/employer/', data).then((response) => {
+        AxiosInstance.post('api/user-company/', data).then((response) => {
             navigate('/employer-dash/');
         });
     }
