@@ -19,8 +19,8 @@ const light = {
         error: {
             main: '#A43820',
         },
-        dark: {
-            main: '#2d2d2d',
+        text: {
+            main: '#000000',
         },
         paper: {
             main: '#efefef',
@@ -39,9 +39,6 @@ const dark = {
             contrastText: "#f6f6f6",
             paper: '#110c1a'
         },
-        text: {
-            primary: '#e1e1e1',
-        },
         primary: {
             main: '#041C32',
         },
@@ -56,6 +53,9 @@ const dark = {
         },
         error: {
             main: '#801313',
+        },
+        text: {
+            main: '#e1e1e1',
         },
         paper: {
             main: '#110c1a',
