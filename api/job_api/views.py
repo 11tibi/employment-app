@@ -133,11 +133,11 @@ class JobView(viewsets.ModelViewSet):
 
 
 class JobEmployerView(generics.ListAPIView):
-    queryset = models.Company.objects.prefetch_related('job_set', 'usercompany_set')
+    queryset = models.Job.objects.prefetch_related('company', 'company__usercompany_set')
     serializer_class = serializers.JobUserSerializer
     permission_classes = [permissions.IsAuthenticated, ]
 
     def list(self, request, *args, **kwargs):
-        data = self.queryset.filter(usercompany__user=request.user.id).order_by('job__created_at').all()[:5]
+        data = self.queryset.filter(company__usercompany__user=request.user.id).order_by('created_at').all()[:5]
         serializer = self.get_serializer(data, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

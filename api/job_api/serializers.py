@@ -77,8 +77,8 @@ class JobSerializer(serializers.ModelSerializer):
 
 
 class JobUserSerializer(serializers.ModelSerializer):
-    job_set = JobSerializer(read_only=True, many=True)
+    usercompany_set = UserCompanySerializer(read_only=True, many=True)
 
     class Meta:
-        model = models.Company
+        model = models.Job
         fields = '__all__'
