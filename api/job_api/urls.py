@@ -14,6 +14,7 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view()),
     path('language/', views.LanguageView.as_view()),
     path('city/<pk>/', views.CityView.as_view()),
+    path('job-employer/', views.JobEmployerView.as_view()),
 ]
 
 urlpatterns += router.urls
