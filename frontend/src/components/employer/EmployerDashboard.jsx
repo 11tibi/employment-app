@@ -11,7 +11,7 @@ const Jobs = () => {
     const navigate = useNavigate();
 
     const handleDelete = (e, id) => {
-        AxiosInstance.delete(`/api/job/${id}`).then((response) => {
+        AxiosInstance.delete(`/api/job/${id}/`).then((response) => {
             setJobs(jobs.filter((item) => item.id !== id))
         });
     }

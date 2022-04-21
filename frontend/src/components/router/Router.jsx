@@ -11,6 +11,7 @@ import EmployerLogin from '../authentication/EmployerLogin';
 import EmployerDashboard from '../employer/EmployerDashboard';
 import AccountDetails from '../employer/AccountDetails';
 import CreatePost from '../employer/CreatePost';
+import EditJob from '../employer/EditJob';
 
 const Router = () => {
     return (
@@ -23,6 +24,7 @@ const Router = () => {
                 <Route path='/employer-dash/' element={<EmployerDashboard />} />
                 <Route path='/employer/account-details/' element={<AccountDetails />} />
                 <Route path='/employer/create/' element={<CreatePost />} />
+                <Route path='/employer/edit-job/:id/' element={<EditJob />} />
             </Routes>
         </BrowserRouter>
     )

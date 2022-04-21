@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {
-    Button, Grid, LinearProgress, Box, Paper, Typography,
+    Button, Grid, Box, Paper, Typography,
     TextField, Autocomplete, InputLabel, Select, MenuItem, FormControl
 } from '@mui/material';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -41,11 +41,11 @@ const CreatePost = () => {
                 <MenuItem value={item.company.id} key={item.company.id}>{item.company.name}</MenuItem>
             );
         });
-    });
+    }, []);
 
-    const handleLocationChange = async (e) => {
+    const handleLocationChange = (e) => {
         setLocation(e.target.value);
-        await AxiosInstance.get(`api/city/${e.target.value}/`).then((response) => {
+        AxiosInstance.get(`api/city/${e.target.value}/`).then((response) => {
             const l = response.data.map(x => ({label: `${x.city}, ${x.county.county}`, key: x.id}));
             setLocations(l);
         })
@@ -72,9 +72,6 @@ const CreatePost = () => {
 
     return (
         <>
-            {/*<Box mt={2}>*/}
-            {/*    <LinearProgress variant="determinate" value={25} sx={{height: 20}}/>*/}
-            {/*</Box>*/}
             <Box my={5} mx={5}>
                 <Box xs={12}>
                     <Paper elevation={12}>
