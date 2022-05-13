@@ -34,6 +34,8 @@ AxiosInstance.interceptors.response.use(
             prevRequest.headers['Authorization'] = `Bearer ${newToken.access}`;
 
             return AxiosInstance(prevRequest);
+        } else if(error.response.status === 401) {
+
         }
         return Promise.reject(error);
     }

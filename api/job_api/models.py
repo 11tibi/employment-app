@@ -70,6 +70,7 @@ class Links(models.Model):
 
 class WorkExperience(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    job_title = models.CharField(max_length=50, blank=False, null=False)
     company_name = models.CharField(max_length=50, blank=False, null=False)
     location = models.CharField(max_length=50, blank=False, null=False)
     period_start = models.DateField(blank=False, null=False)
@@ -80,6 +81,8 @@ class WorkExperience(models.Model):
 
 
 class Education(models.Model):
+    level_of_education = models.CharField(max_length=30, blank=False, null=False)
+    field_of_study = models.CharField(max_length=50, blank=False, null=False)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     institution_name = models.CharField(max_length=50, blank=False, null=False)
     location = models.CharField(max_length=50, blank=False, null=False)

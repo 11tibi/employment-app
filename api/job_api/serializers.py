@@ -28,12 +28,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
         read_only_fields = []
 
 
-class WorkExperienceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.WorkExperience
-        exclude = ['employee']
-
-
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Language
@@ -81,4 +75,55 @@ class JobUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Job
+        fields = '__all__'
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'company': {'read_only': True},
+            'created_at': {'read_only': True},
+            'updated_at': {'read_only': True},
+        }
+
+
+class EducationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Education
+        exclude = ['employee']
+
+
+class SpokenLanguagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.SpokenLanguages
+        fields = '__all__'
+
+
+class LinksSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Links
+        fields = '__all__'
+
+
+class SkillsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Skills
+        fields = '__all__'
+
+
+class WorkExperienceSerializer(serializers.ModelSerializer):
+    # employee = EmployeeSerializer(read_only=True)
+
+    class Meta:
+        model = models.WorkExperience
+        fields = '__all__'
+
+
+class ResumeSerializer(serializers.ModelSerializer):
+    education_set = EducationSerializer(read_only=True, many=True)
+    spokenlanguages_set = SpokenLanguagesSerializer(read_only=True, many=True)
+    links_set = LinksSerializer(read_only=True, many=True)
+    skills_set = SkillsSerializer(read_only=True, many=True)
+    workexperience_set = WorkExperienceSerializer(read_only=True, many=True)
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = models.Employee
         fields = '__all__'

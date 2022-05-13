@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo, useCallback} from "react";
+import React, {useState, useEffect, useMemo, useCallback, useRef} from "react";
 import {Editor, Transforms, createEditor} from "slate";
 import {useSlate, Slate, withReact, Editable} from 'slate-react';
 import {ToggleButton, Paper, ToggleButtonGroup, Divider, FormControl} from '@mui/material';
@@ -197,11 +197,12 @@ export const HoveringToolbar = () => {
 };
 
 const TextEditor = (props) => {
-    const [value, setValue] = useState(props.value);
     const editor = useMemo(
         () => withHistory(withReact(createEditor())),
         []
     );
+
+    const value = useRef(null);
 
     const renderElement = useCallback((props) => <SlateElement {...props} />, []);
     const renderLeaf = useCallback((props) => <SlateLeaf {...props} />, []);
@@ -214,26 +215,38 @@ const TextEditor = (props) => {
                 <Paper elevation={2}>
                     <Slate
                         editor={editor}
-                        value={value}
-                        onChange={props.onChange}
+                        value={[
+        {
+            type: 'paragraph',
+            children: [{text: ''}],
+        },
+    ]}
+                        // onChange={props.onChange}
+
                     >
-                        {/*(value) => {*/}
-                        {/*    setValue(value);*/}
-                        {/*    setValue(JSON.stringify(value));*/}
-                        {/*}*/}
                         <SlateToolbar/>
                         <Editable
                             renderLeaf={renderLeaf}
                             renderElement={renderElement}
-                            onKeyDown={(event) => {
-                                for (const hotkey in HOTKEYS) {
-                                    if (isHotkey(hotkey, event)) {
-                                        event.preventDefault();
-                                        const mark = HOTKEYS[hotkey];
-                                        toggleMark(editor, mark);
-                                    }
-                                }
-                            }}
+                            {...props.register("description")}
+                            ref={value}
+                            onBlur={(e) => {
+                                alert(1)
+                                console.log(e.target.value)
+                                console.log(value)
+                                console.log(editor.v)
+                            }
+
+                            }
+                            // onKeyDown={(event) => {
+                            //     for (const hotkey in HOTKEYS) {
+                            //         if (isHotkey(hotkey, event)) {
+                            //             event.preventDefault();
+                            //             const mark = HOTKEYS[hotkey];
+                            //             toggleMark(editor, mark);
+                            //         }
+                            //     }
+                            // }}
                             style={{minHeight: 300, margin: 20}}
                         />
                     </Slate>

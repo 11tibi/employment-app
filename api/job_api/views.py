@@ -1,4 +1,4 @@
-from rest_framework import generics, viewsets, permissions, status
+from rest_framework import generics, viewsets, permissions, status, mixins
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.db import transaction, IntegrityError
@@ -132,7 +132,7 @@ class JobView(viewsets.ModelViewSet):
         pass
 
 
-class JobEmployerView(generics.ListAPIView):
+class JobEmployerView(viewsets.ModelViewSet):
     queryset = models.Job.objects.prefetch_related('company', 'company__usercompany_set')
     serializer_class = serializers.JobUserSerializer
     permission_classes = [permissions.IsAuthenticated, ]
@@ -141,3 +141,82 @@ class JobEmployerView(generics.ListAPIView):
         data = self.queryset.filter(company__usercompany__user=request.user.id).order_by('created_at').all()[:5]
         serializer = self.get_serializer(data, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        data = get_object_or_404(self.queryset.filter(company__usercompany__user=request.user.id, id=pk))
+        serializer = self.get_serializer(data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def partial_update(self, request, pk=None, *args, **kwargs):
+        queryset = self.queryset.filter(
+            company__usercompany__user=request.user.id, id=pk, company__usercompany__is_admin=True)
+        instance = get_object_or_404(queryset)
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def create(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+class ResumeView(viewsets.ModelViewSet):
+    queryset = models.Employee.objects.prefetch_related(
+        'education_set', 'spokenlanguages_set', 'links_set', 'skills_set', 'workexperience_set', 'user')
+    serializer_class = serializers.ResumeSerializer
+    permission_classes = [permissions.AllowAny, ]
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        data = get_object_or_404(self.queryset.filter(user=request.user.id))
+        serializer = self.get_serializer(data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def list(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def destroy(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+class DeleteView(mixins.DestroyModelMixin):
+    queryset = None
+
+    def destroy(self, request, pk=None, *args, **kwargs):
+        obj = get_object_or_404(self.queryset.filter(id=pk, employee__user_id=request.user.id))
+        obj.delete()
+        return Response(status=status.HTTP_200_OK)
+
+
+class EducationView(viewsets.ModelViewSet, DeleteView):
+    queryset = models.Education.objects.all()
+    serializer_class = serializers.EducationSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        employee_id = models.Employee.objects.select_related('user').get(user_id=request.user.id)
+        serializer.save(employee=employee_id)
+        return Response(status=status.HTTP_201_CREATED)
+
+
+class WorkExperienceView(viewsets.ModelViewSet, DeleteView):
+    queryset = models.WorkExperience.objects.all()
+    serializer_class = serializers.WorkExperienceSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
+
+class LinksView(viewsets.ModelViewSet, DeleteView):
+    queryset = models.Links.objects.all()
+    serializer_class = serializers.LinksSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
+
+class SkillsView(viewsets.ModelViewSet, DeleteView):
+    qeuryset = models.Skills.objects.all()
+    serializer_class = serializers.SkillsSerializer
+    permission_classes = [permissions.IsAuthenticated, ]

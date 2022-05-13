@@ -28,6 +28,20 @@ const light = {
     },
     typography: {
         "fontFamily": `"Noto Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif`,
+        "text": {
+            "fontSize": 25,
+        },
+        "textBold": {
+            "fontSize": 18,
+            "fontWeight": "bold",
+        },
+        "textSmall": {
+            "fontSize": 18,
+        },
+        "textGrey": {
+            "fontSize": 18,
+            color: "#6f6f6f",
+        },
     },
 };
 
