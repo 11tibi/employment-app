@@ -5,16 +5,20 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import EducationForm from './EducationForm';
+import ExperienceForm from "./ExperienceForm";
 
 const ResumeEdit = () => {
     const [resume, setResume] = useState({});
     const [educationFormOpen, setEducationFormOpen] = useState(false);
     const [education, setEducation] = useState([]);
+    const [experienceFormOpen, setExperienceFormOpen] = useState(false);
+    const [experience, setExperience] = useState([]);
 
     const fetchData = () => {
         AxiosInstance.get('/api/resume/0/').then((response) => {
             setResume(response.data);
             setEducation(new Array(response.data.education_set.length).fill(false));
+            setEducation(new Array(response.data.workexperience_set.length).fill(false));
             console.log(resume)
         });
     }
@@ -28,7 +32,7 @@ const ResumeEdit = () => {
             case 'education':
                 AxiosInstance.delete(`/api/education/${id}/`).then(() => fetchData());
                 break;
-            case 'work': 
+            case 'work':
                 AxiosInstance.delete(`/api/work-experience/${id}/`).then(() => fetchData());
                 break;
             case 'links':
@@ -37,7 +41,8 @@ const ResumeEdit = () => {
             case 'skills':
                 AxiosInstance.delete(`/api/skills/${id}/`).then(() => fetchData());
                 break;
-            default: break;
+            default:
+                break;
         }
     }
 
@@ -77,18 +82,20 @@ const ResumeEdit = () => {
                                     <Typography variant='textGrey'>
                                         Educație
                                     </Typography>
-                                    <IconButton color='primary' sx={{float: 'right'}} 
-                                            onClick={() => setEducationFormOpen(!educationFormOpen)}>
+                                    <IconButton color='primary' sx={{float: 'right'}}
+                                                onClick={() => setEducationFormOpen(!educationFormOpen)}>
                                         <AddIcon/>
                                     </IconButton>
                                 </Grid>
                                 <Grid item xs={12} py={0} mb={4}>
                                     <Divider/>
                                 </Grid>
-                                {educationFormOpen ? 
+                                {educationFormOpen ?
                                     (<EducationForm
                                         fetchData={() => fetchData()}
-                                        handleClose={() => {setEducationFormOpen(false)}}
+                                        handleClose={() => {
+                                            setEducationFormOpen(false)
+                                        }}
                                         formType="new"
                                     />) : null
                                 }
@@ -97,8 +104,11 @@ const ResumeEdit = () => {
                                         return (<EducationForm
                                             fetchData={() => fetchData()}
                                             initialData={item}
-                                            handleClose={() => {let newarray = education; newarray[index] = false;
-                                                setEducation([...newarray]);}}
+                                            handleClose={() => {
+                                                let newarray = education;
+                                                newarray[index] = false;
+                                                setEducation([...newarray]);
+                                            }}
                                             formType="edit"
                                         />)
                                     } else {
@@ -108,12 +118,13 @@ const ResumeEdit = () => {
                                                     <Typography variant='textBold'>
                                                         {item.level_of_education} in {item.field_of_study}
                                                     </Typography>
-                                                    <IconButton color='primary' sx={{float: 'right'}} onClick={(e) => handleDelete(e, item.id, 'education')}>
+                                                    <IconButton color='primary' sx={{float: 'right'}}
+                                                                onClick={(e) => handleDelete(e, item.id, 'education')}>
                                                         <DeleteIcon/>
                                                     </IconButton>
                                                     <IconButton color='primary' sx={{float: 'right'}} onClick={
                                                         () => {
-                                                            let newarray = education; 
+                                                            let newarray = education;
                                                             newarray[index] = true;
                                                             setEducation([...newarray]);
                                                         }}
@@ -133,33 +144,61 @@ const ResumeEdit = () => {
                                     <Typography variant='textGrey'>
                                         Experienţa de muncă
                                     </Typography>
-                                    <IconButton color='primary' sx={{float: 'right'}}>
+                                    <IconButton color='primary' sx={{float: 'right'}}
+                                                onClick={() => setExperienceFormOpen(!experienceFormOpen)}>
                                         <AddIcon/>
                                     </IconButton>
                                 </Grid>
                                 <Grid item xs={12} py={0} mb={4}>
                                     <Divider/>
                                 </Grid>
-                                {resume?.workexperience_set?.map((item) => {
-                                    return (
-                                        <>
-                                            <Grid item xs={12}>
-                                                <Typography variant="textBold">{item.job_title}</Typography>
-                                                <IconButton color='primary' sx={{float: 'right'}} onClick={(e) => handleDelete(e, item.id, 'work')}>
-                                                    <DeleteIcon/>
-                                                </IconButton>
-                                                <IconButton color='primary' sx={{float: 'right'}}>
-                                                    <EditIcon/>
-                                                </IconButton>
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                <Typography>
-                                                    {item.company_name} - {item.location}
-                                                </Typography>
-                                                <Typography>{item.period_start} - {item.period_end}</Typography>
-                                            </Grid>
-                                        </>
-                                    )
+                                {experienceFormOpen ? (<ExperienceForm
+                                    fetchData={() => fetchData()}
+                                    handleClose={() => {
+                                        setExperienceFormOpen(false)
+                                    }}
+                                    formType="new"
+                                />) : null}
+                                {resume?.workexperience_set?.map((item, index) => {
+                                    if (experience[index]) {
+                                        return (<ExperienceForm
+                                            fetchData={() => fetchData()}
+                                            initialData={item}
+                                            handleClose={() => {
+                                                let newarray = experience;
+                                                newarray[index] = false;
+                                                setExperience([...newarray]);
+                                            }}
+                                            formType="edit"
+                                        />)
+                                    } else {
+                                        return (
+                                            <>
+                                                <Grid item xs={12}>
+                                                    <Typography variant="textBold">{item.job_title}</Typography>
+                                                    <IconButton color='primary' sx={{float: 'right'}}
+                                                                onClick={(e) => handleDelete(e, item.id, 'work')}>
+                                                        <DeleteIcon/>
+                                                    </IconButton>
+                                                    <IconButton color='primary' sx={{float: 'right'}}
+                                                        onClick={() => {
+                                                            let newarray = experience;
+                                                            newarray[index] = true;
+                                                            setExperience([...newarray]);
+                                                        }}
+                                                    >
+                                                        <EditIcon/>
+                                                    </IconButton>
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <Typography>
+                                                        {item.company_name} - {item.location}
+                                                    </Typography>
+                                                    <Typography>{item.period_start} - {item.period_end}</Typography>
+                                                </Grid>
+                                            </>
+                                        )
+                                    }
                                 })}
 
                                 <Grid item xs={12} mt={4}>
@@ -178,7 +217,9 @@ const ResumeEdit = () => {
                                         <>
                                             <Grid item xs={12}>
                                                 <Link href={item.link} target="_blank">{item.link}</Link>
-                                                <IconButton color='primary' sx={{float: 'right'}} onClick={(e) => {handleDelete(e, item.id, 'links')}}>
+                                                <IconButton color='primary' sx={{float: 'right'}} onClick={(e) => {
+                                                    handleDelete(e, item.id, 'links')
+                                                }}>
                                                     <DeleteIcon/>
                                                 </IconButton>
                                                 <IconButton color='primary' sx={{float: 'right'}}>
@@ -204,8 +245,11 @@ const ResumeEdit = () => {
                                     return (
                                         <>
                                             <Grid item xs={12}>
-                                                <Typography variant="textSmall">{item.skill} - {item.period} ani</Typography>
-                                                <IconButton color='primary' sx={{float: 'right'}} onClick={(e) => {handleDelete(e, item.id, 'skills')}}>
+                                                <Typography
+                                                    variant="textSmall">{item.skill} - {item.period} ani</Typography>
+                                                <IconButton color='primary' sx={{float: 'right'}} onClick={(e) => {
+                                                    handleDelete(e, item.id, 'skills')
+                                                }}>
                                                     <DeleteIcon/>
                                                 </IconButton>
                                                 <IconButton color='primary' sx={{float: 'right'}}>
