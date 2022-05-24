@@ -6,6 +6,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import EducationForm from './EducationForm';
 import ExperienceForm from "./ExperienceForm";
+import LinksForm from "./LinksForm";
+import {LinkSharp} from "@mui/icons-material";
+import SkillsForm from "./SkillsForm";
 
 const ResumeEdit = () => {
     const [resume, setResume] = useState({});
@@ -13,6 +16,10 @@ const ResumeEdit = () => {
     const [education, setEducation] = useState([]);
     const [experienceFormOpen, setExperienceFormOpen] = useState(false);
     const [experience, setExperience] = useState([]);
+    const [linksFormOpen, setLinksFormOpen] = useState(false);
+    const [links, setLinks] = useState([]);
+    const [skillsFormOpen, setSkillsFormOpen] = useState(false);
+    const [skills, setSkills] = useState([]);
 
     const fetchData = () => {
         AxiosInstance.get('/api/resume/0/').then((response) => {
@@ -181,11 +188,11 @@ const ResumeEdit = () => {
                                                         <DeleteIcon/>
                                                     </IconButton>
                                                     <IconButton color='primary' sx={{float: 'right'}}
-                                                        onClick={() => {
-                                                            let newarray = experience;
-                                                            newarray[index] = true;
-                                                            setExperience([...newarray]);
-                                                        }}
+                                                                onClick={() => {
+                                                                    let newarray = experience;
+                                                                    newarray[index] = true;
+                                                                    setExperience([...newarray]);
+                                                                }}
                                                     >
                                                         <EditIcon/>
                                                     </IconButton>
@@ -205,43 +212,91 @@ const ResumeEdit = () => {
                                     <Typography variant='textGrey'>
                                         Link-uri
                                     </Typography>
-                                    <IconButton color='primary' sx={{float: 'right'}}>
+                                    <IconButton color='primary' sx={{float: 'right'}}
+                                                onClick={() => setLinksFormOpen(!linksFormOpen)}>
                                         <AddIcon/>
                                     </IconButton>
                                 </Grid>
                                 <Grid item xs={12} py={0} mb={4}>
                                     <Divider/>
                                 </Grid>
-                                {resume?.links_set?.map((item) => {
-                                    return (
-                                        <>
-                                            <Grid item xs={12}>
-                                                <Link href={item.link} target="_blank">{item.link}</Link>
-                                                <IconButton color='primary' sx={{float: 'right'}} onClick={(e) => {
-                                                    handleDelete(e, item.id, 'links')
-                                                }}>
-                                                    <DeleteIcon/>
-                                                </IconButton>
-                                                <IconButton color='primary' sx={{float: 'right'}}>
-                                                    <EditIcon/>
-                                                </IconButton>
-                                            </Grid>
-                                        </>
-                                    )
+                                {linksFormOpen ? (<LinksForm
+                                    fetchData={() => fetchData()}
+                                    handleClose={() => {
+                                        setLinksFormOpen(false)
+                                    }}
+                                    formType="new"
+                                />) : null}
+                                {resume?.links_set?.map((item, index) => {
+                                    if (links[index]) {
+                                        return (
+                                            <LinksForm
+                                                fetchData={() => fetchData()}
+                                                initialData={item}
+                                                handleClose={() => {
+                                                    let newarray = links;
+                                                    newarray[index] = false;
+                                                    setLinks([...newarray]);
+                                                }}
+                                                formType="edit"
+                                            />)
+                                    } else {
+                                        return (
+                                            <>
+                                                <Grid item xs={12}>
+                                                    <Link href={item.link} target="_blank">{item.link}</Link>
+                                                    <IconButton color='primary' sx={{float: 'right'}} onClick={(e) => {
+                                                        handleDelete(e, item.id, 'links')
+                                                    }}>
+                                                        <DeleteIcon/>
+                                                    </IconButton>
+                                                    <IconButton color='primary' sx={{float: 'right'}} onClick={() => {
+                                                        let newarray = links;
+                                                        newarray[index] = true;
+                                                        setLinks([...newarray]);
+                                                    }}>
+                                                        <EditIcon/>
+                                                    </IconButton>
+                                                </Grid>
+                                            </>
+                                        )
+                                    }
                                 })}
 
                                 <Grid item xs={12} mt={4}>
                                     <Typography variant='textGrey'>
                                         Aptitudini
                                     </Typography>
-                                    <IconButton color='primary' sx={{float: 'right'}}>
+                                    <IconButton color='primary' sx={{float: 'right'}}
+                                                onClick={() => setSkillsFormOpen(!skillsFormOpen)}>
                                         <AddIcon/>
                                     </IconButton>
                                 </Grid>
                                 <Grid item xs={12} py={0} mb={4}>
                                     <Divider/>
                                 </Grid>
-                                {resume?.skills_set?.map((item) => {
+                                {skillsFormOpen ? (<SkillsForm
+                                    fetchData={() => fetchData()}
+                                    handleClose={() => {
+                                        setSkillsFormOpen(false)
+                                    }}
+                                    formType="new"
+                                />) : null}
+                                {resume?.skills_set?.map((item, index) => {
+                                    if (skills[index]) {
+                                        return (
+                                            <SkillsForm
+                                                fetchData={() => fetchData()}
+                                                initialData={item}
+                                                handleClose={() => {
+                                                    let newarray = skills;
+                                                    newarray[index] = false;
+                                                    setSkills([...newarray]);
+                                                }}
+                                                formType="edit"
+                                            />
+                                        )
+                                    }
                                     return (
                                         <>
                                             <Grid item xs={12}>
@@ -252,7 +307,11 @@ const ResumeEdit = () => {
                                                 }}>
                                                     <DeleteIcon/>
                                                 </IconButton>
-                                                <IconButton color='primary' sx={{float: 'right'}}>
+                                                <IconButton color='primary' sx={{float: 'right'}} onClick={() => {
+                                                    let newarray = skills;
+                                                    newarray[index] = true;
+                                                    setSkills([...newarray]);
+                                                }}>
                                                     <EditIcon/>
                                                 </IconButton>
                                             </Grid>

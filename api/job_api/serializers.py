@@ -99,21 +99,19 @@ class SpokenLanguagesSerializer(serializers.ModelSerializer):
 class LinksSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Links
-        fields = '__all__'
+        exclude = ['employee']
 
 
 class SkillsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Skills
-        fields = '__all__'
+        exclude = ['employee']
 
 
 class WorkExperienceSerializer(serializers.ModelSerializer):
-    # employee = EmployeeSerializer(read_only=True)
-
     class Meta:
         model = models.WorkExperience
-        fields = '__all__'
+        exclude = ['employee']
 
 
 class ResumeSerializer(serializers.ModelSerializer):

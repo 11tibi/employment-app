@@ -193,32 +193,37 @@ class DeleteView(mixins.DestroyModelMixin):
         return Response(status=status.HTTP_200_OK)
 
 
-class EducationView(viewsets.ModelViewSet, DeleteView):
-    queryset = models.Education.objects.all()
-    serializer_class = serializers.EducationSerializer
-    permission_classes = [permissions.IsAuthenticated, ]
+class CreateView(mixins.CreateModelMixin):
+    queryset = None
+    serializer_class = None
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         employee_id = models.Employee.objects.select_related('user').get(user_id=request.user.id)
         serializer.save(employee=employee_id)
         return Response(status=status.HTTP_201_CREATED)
 
 
-class WorkExperienceView(viewsets.ModelViewSet, DeleteView):
+class EducationView(viewsets.ModelViewSet, DeleteView, CreateView):
+    queryset = models.Education.objects.all()
+    serializer_class = serializers.EducationSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
+
+
+class WorkExperienceView(viewsets.ModelViewSet, DeleteView, CreateView):
     queryset = models.WorkExperience.objects.all()
     serializer_class = serializers.WorkExperienceSerializer
     permission_classes = [permissions.IsAuthenticated, ]
 
 
-class LinksView(viewsets.ModelViewSet, DeleteView):
+class LinksView(viewsets.ModelViewSet, DeleteView, CreateView):
     queryset = models.Links.objects.all()
     serializer_class = serializers.LinksSerializer
     permission_classes = [permissions.IsAuthenticated, ]
 
 
-class SkillsView(viewsets.ModelViewSet, DeleteView):
-    qeuryset = models.Skills.objects.all()
+class SkillsView(viewsets.ModelViewSet, DeleteView, CreateView):
+    queryset = models.Skills.objects.all()
     serializer_class = serializers.SkillsSerializer
     permission_classes = [permissions.IsAuthenticated, ]
