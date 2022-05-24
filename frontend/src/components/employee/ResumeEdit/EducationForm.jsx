@@ -24,8 +24,8 @@ const EducationForm = ({initialData=initialValues, ...props}) => {
                 props.handleClose();
                 props.fetchData();
             });
-        } else if(props.formType === "edit") {
-            AxiosInstance.patch("/api/education/27/", data).then(() => {
+        } else if (props.formType === "edit") {
+            AxiosInstance.patch(`/api/education/${initialData.id}/`, data).then(() => {
                 props.handleClose();
                 props.fetchData();
             })
