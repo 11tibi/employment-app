@@ -15,6 +15,7 @@ const ResumeEdit = () => {
         AxiosInstance.get('/api/resume/0/').then((response) => {
             setResume(response.data);
             setEducation(new Array(response.data.education_set.length).fill(false));
+            console.log(resume)
         });
     }
 
@@ -25,20 +26,19 @@ const ResumeEdit = () => {
     const handleDelete = (e, id, type) => {
         switch (type) {
             case 'education':
-                AxiosInstance.delete(`/api/education/${id}/`);
+                AxiosInstance.delete(`/api/education/${id}/`).then(() => fetchData());
                 break;
             case 'work': 
-                AxiosInstance.delete(`/api/work-experience/${id}/`);
+                AxiosInstance.delete(`/api/work-experience/${id}/`).then(() => fetchData());
                 break;
             case 'links':
-                AxiosInstance.delete(`/api/links/${id}/`);
+                AxiosInstance.delete(`/api/links/${id}/`).then(() => fetchData());
                 break;
             case 'skills':
-                AxiosInstance.delete(`/api/skills/${id}/`);
+                AxiosInstance.delete(`/api/skills/${id}/`).then(() => fetchData());
                 break;
             default: break;
         }
-        fetchData();
     }
 
     return (
@@ -86,12 +86,21 @@ const ResumeEdit = () => {
                                     <Divider/>
                                 </Grid>
                                 {educationFormOpen ? 
-                                    (<EducationForm handleClose={() => {setEducationFormOpen(false)}}/>) : null}
+                                    (<EducationForm
+                                        fetchData={() => fetchData()}
+                                        handleClose={() => {setEducationFormOpen(false)}}
+                                        formType="new"
+                                    />) : null
+                                }
                                 {resume?.education_set?.map((item, index) => {
                                     if (education[index]) {
-                                        return (<EducationForm initialData={item} 
+                                        return (<EducationForm
+                                            fetchData={() => fetchData()}
+                                            initialData={item}
                                             handleClose={() => {let newarray = education; newarray[index] = false;
-                                                setEducation([...newarray]);}}/>)
+                                                setEducation([...newarray]);}}
+                                            formType="edit"
+                                        />)
                                     } else {
                                         return (
                                             <>

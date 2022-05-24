@@ -19,9 +19,17 @@ const EducationForm = ({initialData=initialValues, ...props}) => {
     });
 
     const onSubmit = (data) => {
-        AxiosInstance.post('/api/education/', data).then(() => {
-            props.handleClose();
-        });
+        if (props.formType === "new") {
+            AxiosInstance.post('/api/education/', data).then(() => {
+                props.handleClose();
+                props.fetchData();
+            });
+        } else if(props.formType === "edit") {
+            AxiosInstance.patch("/api/education/27/", data).then(() => {
+                props.handleClose();
+                props.fetchData();
+            })
+        }
     }
 
     return (

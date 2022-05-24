@@ -211,10 +211,12 @@ class WorkExperienceView(viewsets.ModelViewSet, DeleteView):
     serializer_class = serializers.WorkExperienceSerializer
     permission_classes = [permissions.IsAuthenticated, ]
 
+
 class LinksView(viewsets.ModelViewSet, DeleteView):
     queryset = models.Links.objects.all()
     serializer_class = serializers.LinksSerializer
     permission_classes = [permissions.IsAuthenticated, ]
+
 
 class SkillsView(viewsets.ModelViewSet, DeleteView):
     qeuryset = models.Skills.objects.all()
