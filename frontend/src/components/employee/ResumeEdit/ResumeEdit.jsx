@@ -1,13 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import AxiosInstance from '../../../utils/AxiosApi';
-import {Typography, Box, TextField, Paper, Grid, Button, IconButton, Divider, Link} from '@mui/material';
+import {Typography, Box, Paper, Grid, IconButton, Divider, Link} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import EducationForm from './EducationForm';
 import ExperienceForm from "./ExperienceForm";
 import LinksForm from "./LinksForm";
-import {LinkSharp} from "@mui/icons-material";
 import SkillsForm from "./SkillsForm";
 
 const ResumeEdit = () => {
