@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
     Button, Grid, TextField, Box, FormControl, InputLabel, Select, Link,
     OutlinedInput, MenuItem, Checkbox, ListItemText, Paper, Typography, Chip
@@ -8,6 +8,7 @@ import PaidIcon from '@mui/icons-material/Paid';
 import AxiosInstance from "../../utils/AxiosApi";
 import {Serialize} from "../../utils/EditorSerializer";
 import {useNavigate, Link as RouterLink} from "react-router-dom";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const jobTypes = [{key: 'FULL_TIME', value: 'Full Time'}, {key: 'PART_TIME', value: 'Part Time'},
     {key: 'INTERNSHIP', value: 'Internship/ Voluntariat'}, {key: 'PROJECT', value: 'Proiect/ Sezonie'}]
@@ -18,32 +19,26 @@ function JobSearch(props) {
     const [jobType, setJobType] = useState([]);
     const [date, setDate] = useState('');
     const [job, setJob] = useState([]);
+    const [hasMore, setHasMore] = useState(true);
     const navigate = useNavigate();
-    const page = useRef(1);
-
-    const handleScroll = () => {
-        if (Math.round(window.innerHeight + document.documentElement.scrollTop) !== document.documentElement.offsetHeight) {
-        } else {
-            page.current++;
-            fetchJobs();
-        }
-    }
+    let [page, setPage] = useState(1);
 
     useEffect(() => {
         fetchJobs();
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
     }, [])
 
-    const fetchJobs = () => {
-        const url = `/api/job/search/?title=${position}&location=${where}&job_type=${jobType.join(',')}&date=${date}&page=${page.current}`;
+    const fetchJobs = useCallback(() => {
+        const url = `/api/job/search/?title=${position}&location=${where}&job_type=${jobType.join(',')}&date=${date}&page=${page}`;
         AxiosInstance.get(url).then((response) => {
             const newValue = job.concat(response.data);
             setJob(newValue);
+            const newPage = page + 1;
+            setPage(newPage);
+        }).catch(() => {
+            setHasMore(false);
         });
-        console.log(job)
+    }, [job])
 
-    }
     const formatSalary = (min, max, interval) => {
         let str = `${min} - ${max} lei pe `;
         switch (interval) {
@@ -147,33 +142,40 @@ function JobSearch(props) {
                     </FormControl>
                 </Grid>
                 <Grid item xs={12}>
-                    {job.map((item) => {
-                        return (
-                            <Paper elevation={12} sx={{py: 3, px: 4, my: 4, ":hover": {cursor: 'pointer'}}}
-                                   onClick={() => {
-                                       navigate(`/job/${item.id}/`)
-                                   }}>
-                                <Link component={RouterLink} color='text.main' variant={'text'}
-                                      to={`/job/${item.id}/`} sx={{textDecoration: "none"}}>
-                                    {item.title}
-                                </Link>
-                                <Typography>
-                                    {item.company.name}
-                                </Typography>
-                                <Typography>
-                                    {`${item.location?.city}, ${item.location?.county?.county}`}
-                                </Typography>
-                                <Typography>
-                                    {normalizeJobType(item.job_type)}
-                                </Typography>
-                                <Chip icon={<PaidIcon/>} sx={{my: 2, fontSize: 18}}
-                                      label={formatSalary(item.salary_min, item.salary_max, item.salary_interval)}/>
-                                <Box sx={{height: '10em', lineHeight: '1em', overflow: 'hidden'}}>
-                                    {Serialize(JSON.parse(item.description))}
-                                </Box>
-                            </Paper>
-                        )
-                    })}
+                    <InfiniteScroll
+                        dataLength={job.length}
+                        next={fetchJobs}
+                        hasMore={hasMore}
+                        loader={<h4>Loading...</h4>}
+                    >
+                        {job.map((item) => {
+                            return (
+                                <Paper elevation={12} sx={{py: 3, px: 4, my: 4, ":hover": {cursor: 'pointer'}}}
+                                       onClick={() => {
+                                           navigate(`/job/${item.id}/`)
+                                       }}>
+                                    <Link component={RouterLink} color='text.main' variant={'text'}
+                                          to={`/job/${item.id}/`} sx={{textDecoration: "none"}}>
+                                        {item.title}
+                                    </Link>
+                                    <Typography>
+                                        {item.company.name}
+                                    </Typography>
+                                    <Typography>
+                                        {`${item.location?.city}, ${item.location?.county?.county}`}
+                                    </Typography>
+                                    <Typography>
+                                        {normalizeJobType(item.job_type)}
+                                    </Typography>
+                                    <Chip icon={<PaidIcon/>} sx={{my: 2, fontSize: 18}}
+                                          label={formatSalary(item.salary_min, item.salary_max, item.salary_interval)}/>
+                                    <Box sx={{height: '10em', lineHeight: '1em', overflow: 'hidden'}}>
+                                        {Serialize(JSON.parse(item.description))}
+                                    </Box>
+                                </Paper>
+                            )
+                        })}
+                    </InfiniteScroll>
                 </Grid>
             </Grid>
         </Box>
