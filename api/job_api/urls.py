@@ -1,4 +1,3 @@
-from posixpath import basename
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
@@ -8,6 +7,7 @@ from . import views
 router = DefaultRouter()
 router.register('employee', views.EmployeeView, basename='employee')
 router.register('user-company', views.UserCompanyView, basename='user-company')
+router.register('job/search', views.JobSearchView, basename='search')
 router.register('job', views.JobView, basename='job')
 router.register('job-employer', views.JobEmployerView, basename='job-employer')
 router.register('resume', views.ResumeView, basename='resume')

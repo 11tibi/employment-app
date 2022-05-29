@@ -1,4 +1,5 @@
 from rest_framework import generics, viewsets, permissions, status, mixins
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.db import transaction, IntegrityError
@@ -227,3 +228,31 @@ class SkillsView(viewsets.ModelViewSet, DeleteView, CreateView):
     queryset = models.Skills.objects.all()
     serializer_class = serializers.SkillsSerializer
     permission_classes = [permissions.IsAuthenticated, ]
+
+
+class JobSearchView(viewsets.ModelViewSet):
+    class Pagination(PageNumberPagination):
+        page_size = 10
+        page_query_param = 'page'
+
+    queryset = models.Job.objects.prefetch_related('company', 'location').all()
+    serializer_class = serializers.JobSearchSerializer
+    permission_classes = [permissions.AllowAny, ]
+    pagination_class = Pagination
+
+    def list(self, request, *args, **kwargs):
+        query = self.queryset
+        if request.query_params.get('title', False):
+            query = query.filter(title__icontains=request.query_params['title'])
+        if request.query_params.get('job_type', False):
+            query = query.filter(job_type__in=request.query_params['job_type'].split(','))
+        if request.query_params.get('location', False):
+            query = query.filter(location__city__icontains=request.query_params['location'])
+        if request.query_params.get('date', False):
+            if request.query_params['date'] == 'asc':
+                query = query.order_by('created_at')
+            elif request.query_params['date'] == 'desc':
+                query = query.order_by('-created_at')
+        query = self.paginate_queryset(query)
+        serializer = self.get_serializer(query, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

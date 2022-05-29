@@ -13,20 +13,24 @@ import AccountDetails from '../employer/AccountDetails';
 import CreatePost from '../employer/CreatePost';
 import EditJob from '../employer/EditJob';
 import ResumeEdit from '../employee/ResumeEdit/ResumeEdit';
+import FindJob from "../find_job/FindJob";
+import JobSearch from "../find_job/JobSearch";
 
 const Router = () => {
     return (
         <BrowserRouter>
-            <Navbar />
+            <Navbar/>
             <Routes>
-                <Route path='/register/' element={<CreateAccount />} />
-                <Route path='/login/' element={<Login />} />
-                <Route path='/employer-login/' element={<EmployerLogin />} />
-                <Route path='/employer-dash/' element={<EmployerDashboard />} />
-                <Route path='/employer/account-details/' element={<AccountDetails />} />
-                <Route path='/employer/create/' element={<CreatePost />} />
-                <Route path='/employer/edit-job/:id/' element={<EditJob />} />
-                <Route path='/employee/resume/editor/' element={<ResumeEdit />}/>
+                <Route path='/register/' element={<CreateAccount/>}/>
+                <Route path='/login/' element={<Login/>}/>
+                <Route path='/employer-login/' element={<EmployerLogin/>}/>
+                <Route path='/employer-dash/' element={<EmployerDashboard/>}/>
+                <Route path='/employer/account-details/' element={<AccountDetails/>}/>
+                <Route path='/employer/create/' element={<CreatePost/>}/>
+                <Route path='/employer/edit-job/:id/' element={<EditJob/>}/>
+                <Route path='/employee/resume/editor/' element={<ResumeEdit/>}/>
+                <Route path='/find-job/' element={<FindJob/>}/>
+                <Route path='/jobs/' element={<JobSearch/>}/>
             </Routes>
         </BrowserRouter>
     )

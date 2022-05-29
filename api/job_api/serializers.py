@@ -125,3 +125,12 @@ class ResumeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Employee
         fields = '__all__'
+
+
+class JobSearchSerializer(serializers.ModelSerializer):
+    company = CompanySerializer(read_only=True)
+    location = CitySerializer(read_only=True)
+
+    class Meta:
+        model = models.Job
+        fields = '__all__'
