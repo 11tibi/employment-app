@@ -1,20 +1,13 @@
-import React, {useState, useEffect, useMemo, useCallback, useRef} from "react";
+import React, {useState, useEffect, useMemo, useCallback} from "react";
 import {Editor, Transforms, createEditor} from "slate";
 import {useSlate, Slate, withReact, Editable} from 'slate-react';
 import {ToggleButton, Paper, ToggleButtonGroup, Divider, FormControl} from '@mui/material';
 import {withHistory} from 'slate-history';
-import isHotkey from 'is-hotkey';
 import {
     FormatBold, FormatItalic, FormatUnderlined, Code, LooksOne,
     LooksTwo, FormatQuote, FormatListNumbered, List
 } from '@mui/icons-material';
 
-export const HOTKEYS = {
-    "mod+b": "bold",
-    "mod+i": "italic",
-    "mod+u": "underline",
-    "mod+`": "code"
-};
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 
 export const SlateElement = (props) => {
@@ -172,7 +165,7 @@ export const SlateToolbar = () => {
                     icon: <List/>,
                 })}
             </ToggleButtonGroup>
-            <Divider orientation="vertical" />
+            <Divider orientation="vertical"/>
         </Paper>
     );
 };
@@ -196,13 +189,11 @@ export const HoveringToolbar = () => {
     );
 };
 
-const TextEditor = (props) => {
+const TextEditor = ({value, onChange, ...props}) => {
     const editor = useMemo(
         () => withHistory(withReact(createEditor())),
         []
     );
-
-    const value = useRef(null);
 
     const renderElement = useCallback((props) => <SlateElement {...props} />, []);
     const renderLeaf = useCallback((props) => <SlateLeaf {...props} />, []);
@@ -215,38 +206,13 @@ const TextEditor = (props) => {
                 <Paper elevation={2}>
                     <Slate
                         editor={editor}
-                        value={[
-        {
-            type: 'paragraph',
-            children: [{text: ''}],
-        },
-    ]}
-                        // onChange={props.onChange}
-
+                        value={value}
+                        onChange={(e) => {onChange(e)}}
                     >
                         <SlateToolbar/>
                         <Editable
                             renderLeaf={renderLeaf}
                             renderElement={renderElement}
-                            {...props.register("description")}
-                            ref={value}
-                            onBlur={(e) => {
-                                alert(1)
-                                console.log(e.target.value)
-                                console.log(value)
-                                console.log(editor.v)
-                            }
-
-                            }
-                            // onKeyDown={(event) => {
-                            //     for (const hotkey in HOTKEYS) {
-                            //         if (isHotkey(hotkey, event)) {
-                            //             event.preventDefault();
-                            //             const mark = HOTKEYS[hotkey];
-                            //             toggleMark(editor, mark);
-                            //         }
-                            //     }
-                            // }}
                             style={{minHeight: 300, margin: 20}}
                         />
                     </Slate>
@@ -257,5 +223,3 @@ const TextEditor = (props) => {
 }
 
 export default TextEditor;
-
-// https://sushilkbansal.medium.com/customising-slate-js-part-1-adding-material-ui-c98568951258
