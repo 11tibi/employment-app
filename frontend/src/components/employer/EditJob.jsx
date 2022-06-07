@@ -21,12 +21,8 @@ const EditJob = () => {
     const [salaryInterval, setSalaryInterval] = useState('');
     const [numberOfEmployees, setNumberOfEmployees] = useState(0);
     const [expiresAt, setExpiresAt] = useState(null);
-    const [description, setDescription] = useState([
-        {
-            type: 'paragraph',
-            children: [{text: ''}],
-        },
-    ]);
+    const [description, setDescription] = useState([]);
+    const [canRender, setCanRender] = useState(false);
 
     const navigate = useNavigate();
 
@@ -44,7 +40,7 @@ const EditJob = () => {
 
             let text = JSON.parse(response.data.description);
             setDescription(text);
-
+            setCanRender(true);
         });
     }, []);
 
@@ -72,21 +68,22 @@ const EditJob = () => {
     }
 
     return (
+
         <Box my={5} mx={5}>
-            <Box xs={12}>
+            {canRender ? (<>
                 <Paper elevation={12}>
                     <Grid container px={2} alignItems={'center'} justify={'center'}>
-                        <Grid xs={1}>
+                        <Grid item xs={1}>
                             <IconButton aria-label="back" size="large" onClick={() => navigate(-1)}>
                                 <ArrowBackIosNewIcon/>
                             </IconButton>
                         </Grid>
-                        <Grid xs={10}>
+                        <Grid item xs={10}>
                             <Typography component="h1" align='left' variant='h4' py={3} mx={5}>
                                 Editeaza postarea
                             </Typography>
                         </Grid>
-                        <Grid xs={1}>
+                        <Grid item xs={1}>
                             <IconButton aria-label="delete" color="error" size="large" sx={{float: "right"}}
                                         onClick={handleDelete}>
                                 <DeleteIcon/>
@@ -94,111 +91,111 @@ const EditJob = () => {
                         </Grid>
                     </Grid>
                 </Paper>
-            </Box>
-            <Paper elevation={12} sx={{my: 10}}>
-                <Box component="div" mx={5} pb={5}>
-                    <Grid container spacing={5}>
-                        <Grid item xs={12}>
-                            <TextField
-                                required
-                                label="Titlu"
-                                fullWidth={true}
-                                value={title}
-                                onChange={(e) => {
-                                    setTitle(e.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControl fullWidth>
-                                <InputLabel id="job-type">Tip loc de munca</InputLabel>
-                                <Select
-                                    labelId="job-type"
+                <Paper elevation={12} sx={{my: 10}}>
+                    <Box component="div" mx={5} pb={5}>
+                        <Grid container spacing={5}>
+                            <Grid item xs={12}>
+                                <TextField
                                     required
-                                    value={jobType}
-                                    label="Tip loc de munca"
+                                    label="Titlu"
                                     fullWidth={true}
+                                    value={title}
                                     onChange={(e) => {
-                                        setJobType(e.target.value)
+                                        setTitle(e.target.value);
                                     }}
-                                >
-                                    <MenuItem value={"FULL_TIME"}>Full Time</MenuItem>
-                                    <MenuItem value={"PART_TIME"}>Part Time</MenuItem>
-                                    <MenuItem value={"INTERNSHIP"}>Internship/ Voluntariat</MenuItem>
-                                    <MenuItem value={"PROJECT"}>Proiect/ Sezonier</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <TextField required fullWidth type="number" value={salaryMin} onChange={(e) => {
-                                setSalaryMin(e.target.value)
-                            }} label="Salar Min"/>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <TextField required fullWidth type="number" value={salaryMax} onChange={(e) => {
-                                setSalaryMax(e.target.value)
-                            }} label="Salar Max"/>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <FormControl fullWidth>
-                                <InputLabel id="salary-interval">Interval salar</InputLabel>
-                                <Select
-                                    required
-                                    labelId="salary-interval"
-                                    value={salaryInterval}
-                                    label="Interval salar"
-                                    fullWidth={true}
-                                    onChange={(e) => {
-                                        setSalaryInterval(e.target.value)
-                                    }}
-                                >
-                                    <MenuItem value={"HOUR"}>Ora</MenuItem>
-                                    <MenuItem value={"MONTH"}>Luna</MenuItem>
-                                    <MenuItem value={"YEAR"}>An</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                required
-                                fullWidth
-                                type="number"
-                                label="Cate perosane doriti sa angajati"
-                                value={numberOfEmployees}
-                                onChange={(e) => setNumberOfEmployees(e.target.value)}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                <DesktopDatePicker
-                                    label="Expirea la"
-                                    inputFormat="MM/dd/yyyy"
-                                    value={expiresAt}
-                                    onChange={(expireDate) => {
-                                        setExpiresAt(expireDate)
-                                    }}
-                                    renderInput={(params) => <TextField {...params} fullWidth required/>}
                                 />
-                            </LocalizationProvider>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="job-type">Tip loc de munca</InputLabel>
+                                    <Select
+                                        labelId="job-type"
+                                        required
+                                        value={jobType}
+                                        label="Tip loc de munca"
+                                        fullWidth={true}
+                                        onChange={(e) => {
+                                            setJobType(e.target.value)
+                                        }}
+                                    >
+                                        <MenuItem value={"FULL_TIME"}>Full Time</MenuItem>
+                                        <MenuItem value={"PART_TIME"}>Part Time</MenuItem>
+                                        <MenuItem value={"INTERNSHIP"}>Internship/ Voluntariat</MenuItem>
+                                        <MenuItem value={"PROJECT"}>Proiect/ Sezonier</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <TextField required fullWidth type="number" value={salaryMin} onChange={(e) => {
+                                    setSalaryMin(e.target.value)
+                                }} label="Salar Min"/>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <TextField required fullWidth type="number" value={salaryMax} onChange={(e) => {
+                                    setSalaryMax(e.target.value)
+                                }} label="Salar Max"/>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="salary-interval">Interval salar</InputLabel>
+                                    <Select
+                                        required
+                                        labelId="salary-interval"
+                                        value={salaryInterval}
+                                        label="Interval salar"
+                                        fullWidth={true}
+                                        onChange={(e) => {
+                                            setSalaryInterval(e.target.value)
+                                        }}
+                                    >
+                                        <MenuItem value={"HOUR"}>Ora</MenuItem>
+                                        <MenuItem value={"MONTH"}>Luna</MenuItem>
+                                        <MenuItem value={"YEAR"}>An</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    type="number"
+                                    label="Cate perosane doriti sa angajati"
+                                    value={numberOfEmployees}
+                                    onChange={(e) => setNumberOfEmployees(e.target.value)}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                    <DesktopDatePicker
+                                        label="Expirea la"
+                                        inputFormat="MM/dd/yyyy"
+                                        value={expiresAt}
+                                        onChange={(expireDate) => {
+                                            setExpiresAt(expireDate)
+                                        }}
+                                        renderInput={(params) => <TextField {...params} fullWidth required/>}
+                                    />
+                                </LocalizationProvider>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </Box>
-            </Paper>
-            <Paper elevation={12} sx={{py: 5, px: 5}}>
-                <Typography component='h2' variant='h5' mb={2}>
-                    Adaugati o descriere *
-                </Typography>
-                <TextEditor value={description} onChange={(v) => {
-                    setDescription(v)
-                }}/>
-            </Paper>
-            <Paper elevation={12} sx={{py: 3, px: 5, my: 5}}>
-                <Box display="flex" justify-content="end">
-                    <Button variant="contained" onClick={handleSubmit}>
-                        Editeaza
-                    </Button>
-                </Box>
-            </Paper>
+                    </Box>
+                </Paper>
+                <Paper elevation={12} sx={{py: 5, px: 5}}>
+                    <Typography component='h2' variant='h5' mb={2}>
+                        Adaugati o descriere *
+                    </Typography>
+                    <TextEditor value={description} onChange={(v) => {
+                        setDescription(v)
+                    }}/>
+                </Paper>
+                <Paper elevation={12} sx={{py: 3, px: 5, my: 5}}>
+                    <Box display="flex" justify-content="end">
+                        <Button variant="contained" onClick={handleSubmit}>
+                            Editeaza
+                        </Button>
+                    </Box>
+                </Paper>
+            </>) : null}
         </Box>
     )
 }
