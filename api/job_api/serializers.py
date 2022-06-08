@@ -134,3 +134,9 @@ class JobSearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Job
         fields = '__all__'
+
+
+class ApplySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Candidate
+        exclude = ('employee', )

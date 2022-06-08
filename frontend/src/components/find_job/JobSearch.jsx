@@ -28,6 +28,7 @@ function JobSearch(props) {
     }, [])
 
     const fetchJobs = useCallback(() => {
+
         const url = `/api/job/search/?title=${position}&location=${where}&job_type=${jobType.join(',')}&date=${date}&page=${page}`;
         AxiosInstance.get(url).then((response) => {
             const newValue = job.concat(response.data);
@@ -37,7 +38,15 @@ function JobSearch(props) {
         }).catch(() => {
             setHasMore(false);
         });
-    }, [job])
+    }, [job, position, page])
+
+    const handleSubmit = () => {
+        setPage(1);
+        setJob([])
+        setHasMore(true);
+
+        fetchJobs();
+    }
 
     const formatSalary = (min, max, interval) => {
         let str = `${min} - ${max} lei pe `;
@@ -84,7 +93,7 @@ function JobSearch(props) {
                                onChange={(e) => setWhere(e.target.value)}/>
                 </Grid>
                 <Grid item md={2} xs={12} sx={{display: 'flex'}}>
-                    <Button fullWidth variant={'contained'} onClick={fetchJobs} endIcon={<SearchIcon/>}>
+                    <Button fullWidth variant={'contained'} onClick={handleSubmit} endIcon={<SearchIcon/>}>
                         Caută
                     </Button>
                 </Grid>
@@ -152,10 +161,10 @@ function JobSearch(props) {
                             return (
                                 <Paper elevation={12} sx={{py: 3, px: 4, my: 4, ":hover": {cursor: 'pointer'}}}
                                        onClick={() => {
-                                           navigate(`/job/${item.id}/`)
+                                           navigate(`/viewjob/${item.id}/`)
                                        }}>
                                     <Link component={RouterLink} color='text.main' variant={'text'}
-                                          to={`/job/${item.id}/`} sx={{textDecoration: "none"}}>
+                                          to={`/viewjob/${item.id}/`} sx={{textDecoration: "none"}}>
                                         {item.title}
                                     </Link>
                                     <Typography>

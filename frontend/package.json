@@ -17,6 +17,7 @@
     "escape-html": "^1.0.3",
     "html-react-parser": "^1.4.11",
     "is-hotkey": "^0.2.0",
+    "moment": "^2.29.3",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-hook-form": "^7.30.0",

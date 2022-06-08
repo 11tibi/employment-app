@@ -36,7 +36,7 @@ const light = {
             "fontWeight": "bold",
         },
         "textSmall": {
-            "fontSize": 18,
+            "fontSize": 15,
         },
         "textGrey": {
             "fontSize": 18,

@@ -15,6 +15,8 @@ import EditJob from '../employer/EditJob';
 import ResumeEdit from '../employee/ResumeEdit/ResumeEdit';
 import FindJob from "../find_job/FindJob";
 import JobSearch from "../find_job/JobSearch";
+import ViewJob from "../view_job/ViewJob";
+import Apply from "../view_job/Apply";
 
 const Router = () => {
     return (
@@ -31,6 +33,8 @@ const Router = () => {
                 <Route path='/employee/resume/editor/' element={<ResumeEdit/>}/>
                 <Route path='/find-job/' element={<FindJob/>}/>
                 <Route path='/jobs/' element={<JobSearch/>}/>
+                <Route path='/viewjob/:id/' element={<ViewJob/>}/>
+                <Route path='/apply/' element={<Apply/>}/>
             </Routes>
         </BrowserRouter>
     )

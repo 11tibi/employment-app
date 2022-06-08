@@ -191,8 +191,8 @@ class Job(models.Model):
 class Candidate(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
-    letter_of_intent = models.TextField(default=None)
-    letter_of_intent_path = models.FileField(upload_to='./candidate/letter/', default=None)
+    letter_of_intent = models.TextField(default=None, null=True)
+    letter_of_intent_path = models.FileField(upload_to='./candidate/letter/', default=None, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=False, null=False)
 
     def __str__(self):

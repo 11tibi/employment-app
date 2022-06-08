@@ -6,6 +6,7 @@ from django.db import transaction, IntegrityError
 from django.db.models.functions import Concat
 from django.db.models import Value, CharField
 from .permissions import IsUnauthenticated
+from datetime import date, timedelta
 from . import models
 from . import serializers
 
@@ -256,3 +257,25 @@ class JobSearchView(viewsets.ModelViewSet):
         query = self.paginate_queryset(query)
         serializer = self.get_serializer(query, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        data = get_object_or_404(self.queryset.filter(id=pk))
+        serializer = self.get_serializer(data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ApplyView(viewsets.ModelViewSet):
+    queryset = models.Candidate.objects.prefetch_related('employee', 'job').all()
+    serializer_class = serializers.ApplySerializer
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def create(self, request, *args, **kwargs):
+        job = models.Job.objects.filter(id=request.data['job'], expires_at__gt=date.today())
+        employee = models.Employee.objects.get(user=request.user.id)
+        if not job.exists() or self.queryset.filter(
+                employee=employee.id, job=job[0].id, created_at__gt=date.today() - timedelta(days=14)).exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(employee=employee)
+        return Response(status=status.HTTP_201_CREATED)
