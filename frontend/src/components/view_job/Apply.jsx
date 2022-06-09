@@ -6,7 +6,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import {Serialize} from "../../utils/EditorSerializer";
 import TextEditor from "../editor/TextEditor";
 import UploadFileIcon from '@mui/icons-material/UploadFile';
-import AxiosApi from "../../utils/AxiosApi";
 
 const Apply = (props) => {
     const [cv, setCv] = useState({});

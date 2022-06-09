@@ -26,7 +26,7 @@ const Jobs = () => {
         jobs.map((item) => {
             return (<Grid container p={5} spacing={2}>
                 <Grid item xs={7}>
-                    <Link variant='h3' component={RouterLink} color='text.main' to={`/job/${item.id}/`}
+                    <Link variant='h3' component={RouterLink} color='text.main' to={`/employer/job/${item.id}/`}
                           style={{textDecoration: "none"}}>
                         {item.title}
                     </Link>

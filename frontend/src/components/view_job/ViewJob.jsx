@@ -8,36 +8,7 @@ import {format} from 'date-fns'
 import moment from "moment";
 import {useNavigate} from "react-router-dom";
 import FlagIcon from '@mui/icons-material/Flag';
-
-const formatSalary = (min, max, interval) => {
-    let str = `${min} - ${max} lei pe `;
-    switch (interval) {
-        case 'HOUR':
-            str += 'ora';
-            break;
-        case 'YEAR':
-            str += 'an';
-            break;
-        case 'MONTH':
-            str += 'lună';
-            break;
-    }
-    return str
-
-}
-
-const normalizeJobType = (str) => {
-    switch (str) {
-        case 'FULL_TIME':
-            return 'Full Time';
-        case 'PART_TIME':
-            return 'Part Time';
-        case 'INTERNSHIP':
-            return 'Internship/ Voluntariat';
-        case 'PROJECT':
-            return 'Proiect/ Sezonie';
-    }
-}
+import {normalizeSalary, normalizeJobType} from "../../utils/utils";
 
 const ViewJob = () => {
     const [job, setJob] = useState({description: '{}', created_at: new Date(), updated_at: new Date()});
@@ -89,7 +60,7 @@ const ViewJob = () => {
                     </Grid>
                     <Grid item xs={12}>
                         <Chip icon={<PaidIcon/>} sx={{my: 2, fontSize: 18}}
-                              label={formatSalary(job.salary_min, job.salary_max, job.salary_interval)}/>
+                              label={normalizeSalary(job.salary_min, job.salary_max, job.salary_interval)}/>
                     </Grid>
                     <Grid item xs={12}>
                         <Divider/>
