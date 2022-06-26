@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import AxiosInstance from '../../../utils/AxiosApi';
-import {Typography, Box, Paper, Grid, IconButton, Divider, Link} from '@mui/material';
+import {Typography, Box, Paper, Grid, IconButton, Divider, Link, Avatar} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
@@ -22,10 +22,10 @@ const ResumeEdit = () => {
 
     const fetchData = () => {
         AxiosInstance.get('/api/resume/0/').then((response) => {
-            setResume(response.data);
+            console.log(response.data)
+            setResume(response.data)
             setEducation(new Array(response.data.education_set.length).fill(false));
             setEducation(new Array(response.data.workexperience_set.length).fill(false));
-            console.log(resume)
         });
     }
 
@@ -52,6 +52,22 @@ const ResumeEdit = () => {
         }
     }
 
+    const handleImageUpload = (event) => {
+        if (event.target.value !== '') {
+            let data = new FormData();
+            data.append('profile_image', event.target.files[0]);
+            AxiosInstance.patch('api/profile-picture/-1/', data).then((response) => {
+                setResume(
+                    {
+                        ...resume, user: {
+                            ...resume.user,
+                            profile_image: response.data.profile_image
+                        }
+                    });
+            });
+        }
+    }
+
     return (
         <>
             <Box component="main" my={5} mx={12}>
@@ -63,26 +79,46 @@ const ResumeEdit = () => {
                 >
                     <Paper elevation={12} sx={{my: 5}}>
                         <Box m={4}>
-                            <Grid container spacing={1}>
-                                <Grid item xs={10} my={3}>
-                                    <Typography variant='text'>
-                                        {resume.user?.first_name} {resume.user?.last_name}
-                                    </Typography>
+                            <Grid container>
+                                <Grid item xs={12} md={3}>
+                                    <input
+                                        accept="image/*"
+                                        className='img-upload'
+                                        id="contained-button-file"
+                                        type="file"
+                                        style={{
+                                            display: "none",
+                                        }}
+                                        onChange={handleImageUpload}
+                                    />
+                                    <label htmlFor="contained-button-file">
+                                        <Avatar
+                                            variant={"rounded"}
+                                            alt="image"
+                                            src={resume?.user?.profile_image}
+                                            style={{
+                                                width: 200,
+                                                height: 200,
+                                            }}
+                                        />
+                                    </label>
                                 </Grid>
-                                <Grid item xs={2} my={3}>
-                                    <IconButton color='primary' sx={{float: 'right'}}>
-                                        <EditIcon/>
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Typography variant='textSmall'>
-                                        {resume?.city}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Typography variant='textSmall'>
-                                        {resume.user?.email}
-                                    </Typography>
+                                <Grid item xs={12} md={9}>
+                                    <Grid item xs={12}>
+                                        <Typography variant='text' alignItems={'auto'}>
+                                            {resume.user?.first_name} {resume.user?.last_name}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography variant='textSmall'>
+                                            {resume?.city}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography variant='textSmall'>
+                                            {resume.user?.email}
+                                        </Typography>
+                                    </Grid>
                                 </Grid>
                                 <Grid item xs={12} mt={4}>
                                     <Typography variant='textGrey'>
