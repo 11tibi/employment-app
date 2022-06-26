@@ -29,7 +29,7 @@ const CreatePost = () => {
     ]);
     const navigate = useNavigate();
 
-    let companies = useRef(null);
+    const [companies, setCompanies] = useState([]);
 
     useEffect(() => {
         AxiosInstance.get('/api/user-company/').then((response) => {
@@ -37,9 +37,7 @@ const CreatePost = () => {
                 navigate('/employer/account-details/');
                 return;
             }
-            companies.current = response.data.map((item) =>
-                <MenuItem value={item.company.id} key={item.company.id}>{item.company.name}</MenuItem>
-            );
+            setCompanies(response.data)
         });
     }, []);
 
@@ -108,7 +106,10 @@ const CreatePost = () => {
                                             setCompany(e.target.value);
                                         }}
                                     >
-                                        {companies.current}
+                                        {companies.map((item) =>
+                                            <MenuItem value={item.company.id}
+                                                      key={item.company.id}>{item.company.name}</MenuItem>
+                                        )}
                                     </Select>
                                 </FormControl>
                             </Grid>
