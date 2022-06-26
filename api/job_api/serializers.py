@@ -140,3 +140,25 @@ class ApplySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Candidate
         exclude = ('employee', )
+
+
+class EmployeeUserSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = models.Employee
+        fields = '__all__'
+
+
+class CandidateSerializer(serializers.ModelSerializer):
+    employee = EmployeeUserSerializer(read_only=True)
+
+    class Meta:
+        model = models.Candidate
+        fields = '__all__'
+
+
+class JobResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.JobReports
+        exclude = ['job', 'user']

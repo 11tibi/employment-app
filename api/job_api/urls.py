@@ -16,6 +16,9 @@ router.register('work-experience', views.WorkExperienceView, basename='work-expe
 router.register('links', views.LinksView, basename='links')
 router.register('skills', views.SkillsView, basename='skills')
 router.register('apply', views.ApplyView, basename='apply')
+router.register('candidate', views.CandidatesView, basename='candidate')
+router.register('download-letter', views.DownloadLetterOfIntentView, basename='download-letter')
+router.register('report-job', views.JobReportView, basename='report-job')
 
 urlpatterns = [
     path('user/', views.UserView.as_view()),

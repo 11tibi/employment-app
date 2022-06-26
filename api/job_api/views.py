@@ -1,3 +1,8 @@
+import os
+from wsgiref.util import FileWrapper
+
+from django.conf import settings
+from django.http import HttpResponse
 from rest_framework import generics, viewsets, permissions, status, mixins
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -278,4 +283,57 @@ class ApplyView(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(employee=employee)
+        return Response(status=status.HTTP_201_CREATED)
+
+
+class CandidatesView(viewsets.ModelViewSet):
+    queryset = models.Candidate.objects.all()
+    serializer_class = serializers.CandidateSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        employer = models.Job.objects.filter(company__usercompany__user=request.user.id, id=pk)
+        if not employer.exists():
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        data = self.queryset.select_related('employee', 'employee__user').filter(job=pk).all()
+        serializer = self.get_serializer(data, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class DownloadLetterOfIntentView(viewsets.ModelViewSet):
+    queryset = models.Candidate.objects.all()
+    serializer_class = serializers.CandidateSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        employer = models.Job.objects.filter(company__usercompany__user=request.user.id, id=pk)
+        if not employer.exists():
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        path = get_object_or_404(self.queryset.filter(id=pk).values('letter_of_intent_path'))
+        file_path = os.path.join(settings.MEDIA_ROOT, path['letter_of_intent_path'])
+        if os.path.exists(file_path):
+            with open(file_path, 'rb') as f:
+                if file_path.endswith('.pdf'):
+                    content_type = 'application/pdf'
+                elif file_path.endswith('.docx'):
+                    content_type = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                elif file_path.endswith('.doc'):
+                    content_type = 'application/msword'
+                response = HttpResponse(f.read(), content_type=content_type)
+                return response
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class JobReportView(viewsets.ModelViewSet):
+    queryset = models.JobReports.objects.all()
+    serializer_class = serializers.JobResponseSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def create(self, request, *args, **kwargs):
+        if self.queryset.filter(user=request.user, job=request.data['job_id']).exists():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        job = get_object_or_404(models.Job.objects.filter(id=request.data['job_id']))
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(job=job, user=request.user)
         return Response(status=status.HTTP_201_CREATED)

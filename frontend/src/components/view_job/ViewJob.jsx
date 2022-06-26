@@ -9,9 +9,11 @@ import moment from "moment";
 import {useNavigate} from "react-router-dom";
 import FlagIcon from '@mui/icons-material/Flag';
 import {normalizeSalary, normalizeJobType} from "../../utils/utils";
+import ReportDialog from "./ReportDialog";
 
 const ViewJob = () => {
     const [job, setJob] = useState({description: '{}', created_at: new Date(), updated_at: new Date()});
+    const [reportIsOpen, setReportIsOpen] = useState(false);
     let {id} = useParams();
     const navigate = useNavigate();
 
@@ -44,7 +46,9 @@ const ViewJob = () => {
                         {normalizeJobType(job.job_type)}
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <Button variant={'contained'} fullWidth onClick={() => {navigate('/apply/', {state: {id: job.id}})}}>
+                        <Button variant={'contained'} fullWidth onClick={() => {
+                            navigate('/apply/', {state: {id: job.id}})
+                        }}>
                             Candidați acum
                         </Button>
                     </Grid>
@@ -73,7 +77,10 @@ const ViewJob = () => {
                     <Box sx={{mx: 3}}>
                         {Serialize(JSON.parse(job.description))}
                     </Box>
-                    <Button sx={{my: 2}} variant={"outlined"} color={"warning"} startIcon={<FlagIcon/>}>
+                    <Button sx={{my: 2}} variant={"outlined"} color={"warning"} startIcon={<FlagIcon/>}
+                            onClick={() => {
+                                setReportIsOpen(true)
+                            }}>
                         Raportează locul de muncă
                     </Button>
                     <Divider/>
@@ -85,6 +92,9 @@ const ViewJob = () => {
                     </Typography>
                 </Box>
             </Paper>
+            <ReportDialog isOpen={reportIsOpen} id={id} handleClose={() => {
+                  setReportIsOpen(false)
+              }}/>
         </Box>
     );
 };

@@ -197,3 +197,18 @@ class Candidate(models.Model):
 
     def __str__(self):
         return f'{self.employee} {self.job}'
+
+
+class JobReports(models.Model):
+    class Reasons(models.TextChoices):
+        SPAM = 'Spam', _('Spam')
+        INAPPROPRIATE = 'Inappropriate', _('Inappropriate')
+        INCORRECT = 'Incorrect', _('Incorrect')
+        OTHER = 'Other', _('Other')
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    reason = models.CharField(choices=Reasons.choices, max_length=13, null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.reason}'
