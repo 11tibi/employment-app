@@ -20,6 +20,7 @@ router.register('apply', views.ApplyView, basename='apply')
 router.register('candidate', views.CandidatesView, basename='candidate')
 router.register('download-letter', views.DownloadLetterOfIntentView, basename='download-letter')
 router.register('report-job', views.JobReportView, basename='report-job')
+router.register('employer-resume', views.EmployerResumeView, basename='employer-resume')
 
 urlpatterns = [
     path('user/', views.UserView.as_view()),

@@ -357,3 +357,15 @@ class ProfilePictureView(viewsets.ModelViewSet):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
+
+
+class EmployerResumeView(viewsets.ModelViewSet):
+    queryset = models.Employee.objects.prefetch_related(
+        'education_set', 'spokenlanguages_set', 'links_set', 'skills_set', 'workexperience_set', 'user')
+    serializer_class = serializers.ResumeSerializer
+    permission_classes = [permissions.AllowAny, ]
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        data = get_object_or_404(self.queryset.filter(id=pk))
+        serializer = self.get_serializer(data)
+        return Response(serializer.data, status=status.HTTP_200_OK)

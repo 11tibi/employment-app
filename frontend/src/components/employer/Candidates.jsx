@@ -14,7 +14,6 @@ const Candidate = () => {
 
     useEffect(() => {
         AxiosInstance.get(`/api/candidate/${id}/`).then((response) => {
-            console.log(response.data);
             setCandidates(response.data);
         });
     }, []);
@@ -37,7 +36,7 @@ const Candidate = () => {
                                 <Grid item xs={12}>
                                     <Typography variant={'text'} sx={{cursor: 'pointer'}}
                                                 onClick={() => {
-                                                    navigate(``)
+                                                    navigate(`/resume-view/${item?.employee?.id}/`)
                                                 }}>
                                         {item?.employee?.user?.first_name} {item?.employee?.user?.last_name}
                                     </Typography>
