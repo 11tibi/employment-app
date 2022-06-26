@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import AxiosInstance from "../../utils/AxiosApi";
-import {useNavigate, useParams} from "react-router-dom";
-import {Box, Button, Chip, Divider, Grid, IconButton, Link, Paper, Typography} from "@mui/material";
+import {useNavigate, useParams, Link as RouterLink} from "react-router-dom";
+import {Box, Chip, Divider, Grid, IconButton, Link, Paper, Typography} from "@mui/material";
 import PaidIcon from "@mui/icons-material/Paid";
 import {Serialize} from "../../utils/EditorSerializer";
 import moment from "moment";
@@ -18,8 +18,8 @@ const EmployerViewJob = () => {
 
     useEffect(() => {
         AxiosInstance.get(`api/job/search/${id}/`).then((response) => {
-            console.log(response.data);
             setJob(response.data);
+            console.log(response.data)
         });
     }, []);
 
@@ -69,7 +69,7 @@ const EmployerViewJob = () => {
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <Grid item xs={12} my={2}>
-                            <Link href={''}>
+                            <Link component={RouterLink} to={`/employer/candidates/${id}/`}>
                                 Vezi cine a aplicat la acest loc de muncă
                             </Link>
                         </Grid>
@@ -82,9 +82,6 @@ const EmployerViewJob = () => {
                                         onClick={() => navigate(`/employer/edit-job/${id}/`)}>
                                 <EditIcon/>
                             </IconButton>
-                        </Grid>
-                        <Grid item xs={12}>
-
                         </Grid>
                     </Grid>
                 </Grid>
