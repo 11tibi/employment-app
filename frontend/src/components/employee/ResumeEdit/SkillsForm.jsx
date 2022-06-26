@@ -37,9 +37,11 @@ const SkillsForm = ({initialData=initialValues, ...props}) => {
                 <TextField required label="Perioada" type={"number"}
                         fullWidth={true} {...register(`period`)}/>
             </Grid>
-            <Grid item xs={12}>
-                <Button type="submit" variant="contained" onClick={handleSubmit(onSubmit)}>Creaza</Button>
-                <Button type="button" variant="contained" onClick={() => props.handleClose()}>Anulare</Button>
+            <Grid item xs={6} md={2}>
+                <Button type="submit" fullWidth variant="contained" onClick={handleSubmit(onSubmit)}>Creaza</Button>
+            </Grid>
+            <Grid item xs={6} md={2}>
+                <Button type="button" fullWidth variant="contained" onClick={() => props.handleClose()}>Anulare</Button>
             </Grid>
             <Grid item xs={12}>
                 <Divider/>

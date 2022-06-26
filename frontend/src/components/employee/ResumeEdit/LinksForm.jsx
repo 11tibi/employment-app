@@ -32,9 +32,11 @@ function LinksForm({initialData = initialValues, ...props}) {
                 <TextField required label="Link"
                            fullWidth={true} {...register(`link`)}/>
             </Grid>
-            <Grid item xs={12}>
-                <Button type="submit" variant="contained" onClick={handleSubmit(onSubmit)}>Creaza</Button>
-                <Button type="button" variant="contained" onClick={() => props.handleClose()}>Anulare</Button>
+            <Grid item xs={6} md={2}>
+                <Button type="submit" fullWidth variant="contained" onClick={handleSubmit(onSubmit)}>Creaza</Button>
+            </Grid>
+            <Grid item xs={6} md={2}>
+                <Button type="button" fullWidth variant="contained" onClick={() => props.handleClose()}>Anulare</Button>
             </Grid>
             <Grid item xs={12}>
                 <Divider/>
