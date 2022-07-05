@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
 import {Typography, Grid, TextField, Button, Box} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import {useNavigate} from "react-router-dom";
 
 function FindJob(props) {
     const [position, setPosition] = useState('');
     const [where, setWhere] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = () => {
-
+        navigate('/jobs/', {state: {position, where}});
     }
 
     return (

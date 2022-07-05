@@ -7,21 +7,22 @@ import SearchIcon from "@mui/icons-material/Search";
 import PaidIcon from '@mui/icons-material/Paid';
 import AxiosInstance from "../../utils/AxiosApi";
 import {Serialize} from "../../utils/EditorSerializer";
-import {useNavigate, Link as RouterLink} from "react-router-dom";
+import {useNavigate, Link as RouterLink, useLocation} from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const jobTypes = [{key: 'FULL_TIME', value: 'Full Time'}, {key: 'PART_TIME', value: 'Part Time'},
     {key: 'INTERNSHIP', value: 'Internship/ Voluntariat'}, {key: 'PROJECT', value: 'Proiect/ Sezonie'}]
 
 function JobSearch(props) {
-    const [position, setPosition] = useState('');
-    const [where, setWhere] = useState('');
+    const location = useLocation();
+    const [position, setPosition] = useState(location?.state?.position ? location?.state?.position : '');
+    const [where, setWhere] = useState(location.state.where ? location?.state?.where : '');
     const [jobType, setJobType] = useState([]);
     const [date, setDate] = useState('');
     const [job, setJob] = useState([]);
     const [hasMore, setHasMore] = useState(true);
-    const navigate = useNavigate();
     let [page, setPage] = useState(1);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchJobs();
