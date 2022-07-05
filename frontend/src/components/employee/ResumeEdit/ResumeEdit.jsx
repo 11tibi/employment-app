@@ -133,26 +133,33 @@ const ResumeEdit = () => {
                                     <Divider/>
                                 </Grid>
                                 {educationFormOpen ?
-                                    (<EducationForm
-                                        fetchData={() => fetchData()}
-                                        handleClose={() => {
-                                            setEducationFormOpen(false)
-                                        }}
-                                        formType="new"
-                                    />) : null
+                                    (
+                                        <Grid container spacing={2}>
+                                            <EducationForm
+                                                fetchData={() => fetchData()}
+                                                handleClose={() => {
+                                                    setEducationFormOpen(false)
+                                                }}
+                                                formType="new"
+                                            />
+                                        </Grid>
+                                    ) : null
                                 }
                                 {resume?.education_set?.map((item, index) => {
                                     if (education[index]) {
-                                        return (<EducationForm
-                                            fetchData={() => fetchData()}
-                                            initialData={item}
-                                            handleClose={() => {
-                                                let newarray = education;
-                                                newarray[index] = false;
-                                                setEducation([...newarray]);
-                                            }}
-                                            formType="edit"
-                                        />)
+                                        return (
+                                            <Grid container spacing={2}>
+                                                <EducationForm
+                                                    fetchData={() => fetchData()}
+                                                    initialData={item}
+                                                    handleClose={() => {
+                                                        let newarray = education;
+                                                        newarray[index] = false;
+                                                        setEducation([...newarray]);
+                                                    }}
+                                                    formType="edit"
+                                                />
+                                            </Grid>)
                                     } else {
                                         return (
                                             <>
@@ -194,25 +201,32 @@ const ResumeEdit = () => {
                                 <Grid item xs={12} py={0} mb={4}>
                                     <Divider/>
                                 </Grid>
-                                {experienceFormOpen ? (<ExperienceForm
-                                    fetchData={() => fetchData()}
-                                    handleClose={() => {
-                                        setExperienceFormOpen(false)
-                                    }}
-                                    formType="new"
-                                />) : null}
+                                {experienceFormOpen ? (
+                                    <Grid container spacing={2}>
+                                        <ExperienceForm
+                                            fetchData={() => fetchData()}
+                                            handleClose={() => {
+                                                setExperienceFormOpen(false)
+                                            }}
+                                            formType="new"
+                                        />
+                                    </Grid>
+                                ) : null}
                                 {resume?.workexperience_set?.map((item, index) => {
                                     if (experience[index]) {
-                                        return (<ExperienceForm
-                                            fetchData={() => fetchData()}
-                                            initialData={item}
-                                            handleClose={() => {
-                                                let newarray = experience;
-                                                newarray[index] = false;
-                                                setExperience([...newarray]);
-                                            }}
-                                            formType="edit"
-                                        />)
+                                        return (
+                                            <Grid container spacing={2}>
+                                                <ExperienceForm
+                                                    fetchData={() => fetchData()}
+                                                    initialData={item}
+                                                    handleClose={() => {
+                                                        let newarray = experience;
+                                                        newarray[index] = false;
+                                                        setExperience([...newarray]);
+                                                    }}
+                                                    formType="edit"
+                                                />
+                                            </Grid>)
                                     } else {
                                         return (
                                             <>
@@ -255,26 +269,31 @@ const ResumeEdit = () => {
                                 <Grid item xs={12} py={0} mb={4}>
                                     <Divider/>
                                 </Grid>
-                                {linksFormOpen ? (<LinksForm
-                                    fetchData={() => fetchData()}
-                                    handleClose={() => {
-                                        setLinksFormOpen(false)
-                                    }}
-                                    formType="new"
-                                />) : null}
+                                {linksFormOpen ? (
+                                    <Grid container spacing={2}>
+                                        <LinksForm
+                                            fetchData={() => fetchData()}
+                                            handleClose={() => {
+                                                setLinksFormOpen(false)
+                                            }}
+                                            formType="new"
+                                        />
+                                    </Grid>) : null}
                                 {resume?.links_set?.map((item, index) => {
                                     if (links[index]) {
                                         return (
-                                            <LinksForm
-                                                fetchData={() => fetchData()}
-                                                initialData={item}
-                                                handleClose={() => {
-                                                    let newarray = links;
-                                                    newarray[index] = false;
-                                                    setLinks([...newarray]);
-                                                }}
-                                                formType="edit"
-                                            />)
+                                            <Grid container spacing={2}>
+                                                <LinksForm
+                                                    fetchData={() => fetchData()}
+                                                    initialData={item}
+                                                    handleClose={() => {
+                                                        let newarray = links;
+                                                        newarray[index] = false;
+                                                        setLinks([...newarray]);
+                                                    }}
+                                                    formType="edit"
+                                                />
+                                            </Grid>)
                                     } else {
                                         return (
                                             <>
@@ -310,26 +329,31 @@ const ResumeEdit = () => {
                                 <Grid item xs={12} py={0} mb={4}>
                                     <Divider/>
                                 </Grid>
-                                {skillsFormOpen ? (<SkillsForm
-                                    fetchData={() => fetchData()}
-                                    handleClose={() => {
-                                        setSkillsFormOpen(false)
-                                    }}
-                                    formType="new"
-                                />) : null}
+                                {skillsFormOpen ? (
+                                    <Grid container spacing={2}>
+                                        <SkillsForm
+                                            fetchData={() => fetchData()}
+                                            handleClose={() => {
+                                                setSkillsFormOpen(false)
+                                            }}
+                                            formType="new"
+                                        />
+                                    </Grid>) : null}
                                 {resume?.skills_set?.map((item, index) => {
                                     if (skills[index]) {
                                         return (
-                                            <SkillsForm
-                                                fetchData={() => fetchData()}
-                                                initialData={item}
-                                                handleClose={() => {
-                                                    let newarray = skills;
-                                                    newarray[index] = false;
-                                                    setSkills([...newarray]);
-                                                }}
-                                                formType="edit"
-                                            />
+                                            <Grid container spacing={2}>
+                                                <SkillsForm
+                                                    fetchData={() => fetchData()}
+                                                    initialData={item}
+                                                    handleClose={() => {
+                                                        let newarray = skills;
+                                                        newarray[index] = false;
+                                                        setSkills([...newarray]);
+                                                    }}
+                                                    formType="edit"
+                                                />
+                                            </Grid>
                                         )
                                     }
                                     return (
