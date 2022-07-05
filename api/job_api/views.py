@@ -145,7 +145,7 @@ class JobEmployerView(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, ]
 
     def list(self, request, *args, **kwargs):
-        data = self.queryset.filter(company__usercompany__user=request.user.id).order_by('created_at').all()[:5]
+        data = self.queryset.filter(company__usercompany__user=request.user.id).order_by('created_at').all()
         serializer = self.get_serializer(data, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
