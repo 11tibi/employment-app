@@ -2,7 +2,8 @@ import React from 'react';
 import {
     BrowserRouter,
     Routes,
-    Route
+    Route,
+    Navigate
 } from 'react-router-dom';
 import CreateAccount from '../authentication/CreateAccount';
 import Login from '../authentication/Login';
@@ -26,21 +27,22 @@ const Router = () => {
         <BrowserRouter>
             <Navbar/>
             <Routes>
-                <Route path='/register/' element={<CreateAccount/>}/>
-                <Route path='/login/' element={<Login/>}/>
-                <Route path='/employer-login/' element={<EmployerLogin/>}/>
-                <Route path='/employer-dash/' element={<EmployerDashboard/>}/>
-                <Route path='/employer/account-details/' element={<AccountDetails/>}/>
-                <Route path='/employer/create/' element={<CreatePost/>}/>
-                <Route path='/employer/job/:id/' element={<EmployerViewJob/>}/>
-                <Route path='/employer/edit-job/:id/' element={<EditJob/>}/>
-                <Route path='/employer/candidates/:id/' element={<Candidates/>}/>
-                <Route path='/employee/resume/editor/' element={<ResumeEdit/>}/>
-                <Route path='/find-job/' element={<FindJob/>}/>
-                <Route path='/jobs/' element={<JobSearch/>}/>
-                <Route path='/viewjob/:id/' element={<ViewJob/>}/>
-                <Route path='/apply/' element={<Apply/>}/>
-                <Route path='/resume-view/:id/' element={<ResumeView/>}/>
+                <Route path={'/register/'} element={<CreateAccount/>}/>
+                <Route path={'/login/'} element={<Login/>}/>
+                <Route path={'/employer-login/'} element={<EmployerLogin/>}/>
+                <Route path={'/employer-dash/'} element={<EmployerDashboard/>}/>
+                <Route path={'/employer/account-details/'} element={<AccountDetails/>}/>
+                <Route path={'/employer/create/'} element={<CreatePost/>}/>
+                <Route path={'/employer/job/:id/'} element={<EmployerViewJob/>}/>
+                <Route path={'/employer/edit-job/:id/'} element={<EditJob/>}/>
+                <Route path={'/employer/candidates/:id/'} element={<Candidates/>}/>
+                <Route path={'/employee/resume/editor/'} element={<ResumeEdit/>}/>
+                <Route path={'/find-job/'} element={<FindJob/>}/>
+                <Route path={'/jobs/'} element={<JobSearch/>}/>
+                <Route path={'/viewjob/:id/'} element={<ViewJob/>}/>
+                <Route path={'/apply/'} element={<Apply/>}/>
+                <Route path={'/resume-view/:id/'} element={<ResumeView/>}/>
+                <Route path={'/'} element={<Navigate to={'/find-job/'}/>}/>
             </Routes>
         </BrowserRouter>
     )
