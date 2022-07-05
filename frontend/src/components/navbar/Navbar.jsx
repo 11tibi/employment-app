@@ -12,8 +12,8 @@ let Navbar = () => {
 
     return (
         <Box sx={{flexGrow: 1}}>
-            <AppBar position="static">
-                <Toolbar style={{minHeight: '50px'}} color='navbar'>
+            <AppBar position="static" color='navbar'>
+                <Toolbar style={{minHeight: '50px'}}>
                     <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                         Home
                     </Typography>
