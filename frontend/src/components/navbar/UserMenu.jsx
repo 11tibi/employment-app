@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
-import {Avatar, IconButton, Menu, MenuItem, Divider, ListItemIcon} from '@mui/material';
+import {Avatar, IconButton, Menu, MenuItem, Divider} from '@mui/material';
 import Logout from './Logout';
+import {useNavigate} from "react-router-dom";
 
 const UserMenu = () => {
     const [anchorEl, setAnchorEl] = useState(null);
+    const navigate = useNavigate();
 
     const handleClick = (e) => {
         setAnchorEl(e.currentTarget);
@@ -59,8 +61,11 @@ const UserMenu = () => {
                     },
                 }}
             >
-                <MenuItem>
+                <MenuItem onClick={() => {navigate('/employee/resume/editor/')}}>
                     <Avatar/> Profile
+                </MenuItem>
+                <MenuItem onClick={() => {navigate('/employer-dash/')}}>
+                    Dashboard Angajator
                 </MenuItem>
                 <Divider />
                 <Logout />
