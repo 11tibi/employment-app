@@ -21,7 +21,7 @@ const ViewJob = () => {
     const [openDialog, setOpenDialog] = useState(false);
 
     useEffect(() => {
-        if (location.state.openSnack) {
+        if (location?.state?.openSnack) {
             setOpenDialog(true);
         }
 
