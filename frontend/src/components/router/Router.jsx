@@ -5,6 +5,7 @@ import {
     Route,
     Navigate
 } from 'react-router-dom';
+import ProtectedRoute from "./ProtectedRoute";
 import CreateAccount from '../authentication/CreateAccount';
 import Login from '../authentication/Login';
 import Navbar from '../navbar/Navbar';
@@ -30,7 +31,11 @@ const Router = () => {
                 <Route path={'/login/'} element={<Login/>}/>
                 <Route path={'/employer-dash/'} element={<EmployerDashboard/>}/>
                 <Route path={'/employer/account-details/'} element={<AccountDetails/>}/>
-                <Route path={'/employer/create/'} element={<CreatePost/>}/>
+                <Route path={'/employer/create/'} element={
+                    <ProtectedRoute>
+                        <CreatePost/>
+                    </ProtectedRoute>
+                }/>
                 <Route path={'/employer/job/:id/'} element={<EmployerViewJob/>}/>
                 <Route path={'/employer/edit-job/:id/'} element={<EditJob/>}/>
                 <Route path={'/employer/candidates/:id/'} element={<Candidates/>}/>
