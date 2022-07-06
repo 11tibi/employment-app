@@ -46,7 +46,7 @@ const Apply = (props) => {
         formData.append("letter_of_intent_path", file);
 
         AxiosInstance.post('api/apply/', formData).then((r) => {
-            navigate(`/viewjob/${id}/`);
+            navigate(`/viewjob/${id}/`, {state: {openSnack: true}});
         });
     };
 

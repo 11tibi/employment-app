@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import AxiosInstance from "../../utils/AxiosApi";
-import {useParams} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import {Grid, Paper, Typography, Box, Button, Chip, Divider} from "@mui/material";
 import PaidIcon from "@mui/icons-material/Paid";
 import {Serialize} from "../../utils/EditorSerializer";
@@ -10,14 +10,21 @@ import {useNavigate} from "react-router-dom";
 import FlagIcon from '@mui/icons-material/Flag';
 import {normalizeSalary, normalizeJobType} from "../../utils/utils";
 import ReportDialog from "./ReportDialog";
+import SnackbarFeedback from "../../feedback/SnackbarFeedback";
 
 const ViewJob = () => {
     const [job, setJob] = useState({description: '{}', created_at: new Date(), updated_at: new Date()});
     const [reportIsOpen, setReportIsOpen] = useState(false);
     let {id} = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
+    const [openDialog, setOpenDialog] = useState(false);
 
     useEffect(() => {
+        if (location.state.openSnack) {
+            setOpenDialog(true);
+        }
+
         AxiosInstance.get(`api/job/search/${id}/`).then((response) => {
             setJob(response.data);
         });
@@ -93,8 +100,13 @@ const ViewJob = () => {
                 </Box>
             </Paper>
             <ReportDialog isOpen={reportIsOpen} id={id} handleClose={() => {
-                  setReportIsOpen(false)
-              }}/>
+                setReportIsOpen(false)
+            }}/>
+            <SnackbarFeedback
+                open={openDialog}
+                message={'Candidatura dumneavoastră a fost trimisă'} handleClose={() => {
+                setOpenDialog(false)
+            }}/>
         </Box>
     );
 };
