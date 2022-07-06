@@ -47,7 +47,7 @@ const Jobs = () => {
                     <Divider fullWidth/>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography valiant='h4' component='h3'>
+                    <Typography valiant='h4' component='h3' sx={{height: 240, lineHeight: "20px", overflow: 'hidden'}}>
                         {Serialize(JSON.parse(item.description))}
                     </Typography>
                 </Grid>

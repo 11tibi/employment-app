@@ -55,7 +55,7 @@ class UserCompanyView(viewsets.ModelViewSet):
                 employer_company_serializer = serializers.UserCompanySerializer(
                     data={'user': request.user.id, 'company': company.id, 'is_admin': True})
                 employer_company_serializer.is_valid(raise_exception=True)
-                employer_company_serializer.save()
+                employer_company_serializer.save(user=request.user, company=company, is_admin=True)
                 return Response(status=status.HTTP_201_CREATED)
         except IntegrityError:
             return Response(status=status.HTTP_400_BAD_REQUEST)

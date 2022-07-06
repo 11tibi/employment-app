@@ -125,8 +125,6 @@ class Skills(models.Model):
 
 class Company(models.Model):
     name = models.CharField(max_length=20, blank=False, null=False)
-    profile_picture = models.ImageField(upload_to='./company_img', blank=True, null=True)
-    video = models.FileField(upload_to='./company_video', blank=True, null=True)
     phone_number = models.CharField(max_length=15)
     email = models.EmailField(blank=False, null=False)
     website = models.URLField(null=True, default=None)
@@ -172,7 +170,7 @@ class Job(models.Model):
         YEAR = 'YEAR', _('an')
 
     company = models.ForeignKey(Company, on_delete=models.RESTRICT)
-    title = models.CharField(max_length=20, blank=False, null=False)
+    title = models.CharField(max_length=50, blank=False, null=False)
     location = models.ForeignKey(City, on_delete=models.RESTRICT)
     job_type = models.CharField(choices=JobType.choices, max_length=10, null=False, blank=False)
     number_of_employees = models.PositiveIntegerField(null=False, blank=False)
