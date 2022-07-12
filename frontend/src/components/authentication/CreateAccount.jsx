@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
-import { Container, Box, Typography, TextField, Button, Grid } from '@mui/material';
-import { Link } from "react-router-dom";
+import React, {useState} from 'react';
+import {Container, Box, Typography, TextField, Button, Grid} from '@mui/material';
+import {Link} from "react-router-dom";
 import AxiosInstance from '../../utils/AxiosApi';
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 let CreateAccount = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [first_name, setFname] = useState('');
     const [last_name, setLname] = useState('');
+    const [phone_number, setPhoneNumber] = useState('');
+    const [location, setLocation] = useState('');
     let navigate = useNavigate();
 
     let handleSubmit = (e) => {
         e.preventDefault();
-        let data = {email, password, first_name, last_name};
+        let data = {email, password, first_name, last_name, phone_number, location};
         AxiosInstance.post("/api/register/", data).then((response) => {
             navigate("/login/");
         });
@@ -44,7 +46,9 @@ let CreateAccount = () => {
                                     label="Email Address"
                                     name="email"
                                     autoComplete="email"
-                                    onChange={(e) => {setEmail(e.target.value)}}
+                                    onChange={(e) => {
+                                        setEmail(e.target.value)
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -56,7 +60,9 @@ let CreateAccount = () => {
                                     type="password"
                                     id="password"
                                     autoComplete="new-password"
-                                    onChange={(e) => {setPassword(e.target.value)}}
+                                    onChange={(e) => {
+                                        setPassword(e.target.value)
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -68,7 +74,9 @@ let CreateAccount = () => {
                                     type="first_name"
                                     id="first_name"
                                     autoComplete="name"
-                                    onChange={(e) => {setFname(e.target.value)}}
+                                    onChange={(e) => {
+                                        setFname(e.target.value)
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -80,7 +88,35 @@ let CreateAccount = () => {
                                     type="last_name"
                                     id="last_name"
                                     autoComplete="name"
-                                    onChange={(e) => {setLname(e.target.value)}}
+                                    onChange={(e) => {
+                                        setLname(e.target.value)
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name="phone_number"
+                                    label="Număr detelefon"
+                                    type="phone_number"
+                                    id="phone_number"
+                                    onChange={(e) => {
+                                        setPhoneNumber(e.target.value)
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name="location"
+                                    label="Oras"
+                                    type="location"
+                                    id="location"
+                                    onChange={(e) => {
+                                        setLocation(e.target.value)
+                                    }}
                                 />
                             </Grid>
                         </Grid>

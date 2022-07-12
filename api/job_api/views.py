@@ -26,9 +26,22 @@ class UserView(generics.RetrieveAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class RegisterView(generics.CreateAPIView):
+class RegisterView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny, ]
     serializer_class = serializers.RegisterSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        user = models.User.objects.get(email=serializer.data['email'])
+        data = {'city': request.data['location'], 'phone_number': request.data['phone_number']}
+        employee_serializer = serializers.EmployeeSerializer(data=data)
+        employee_serializer.is_valid()
+        employee_serializer.is_valid(raise_exception=True)
+        employee_serializer.save(user=user)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class UserCompanyView(viewsets.ModelViewSet):
