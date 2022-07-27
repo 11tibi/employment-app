@@ -1,6 +1,5 @@
 # Employment web application
 
----
 
 Employment web application built with Django, React, and 
 MaterialUI. The application is similar to web apps like 
@@ -8,7 +7,6 @@ indeed and eJobs.
 
 # Setup
 
----
 
 Clone the repository.
 
